@@ -35,17 +35,8 @@
       z-index: 0;
     }
 
-    .glow-1 {
-      background: #fecdd3;
-      top: -100px;
-      left: -100px;
-    }
-
-    .glow-2 {
-      background: #fde68a;
-      bottom: -100px;
-      right: -100px;
-    }
+    .glow-1 { background: #fecdd3; top: -100px; left: -100px; }
+    .glow-2 { background: #fde68a; bottom: -100px; right: -100px; }
 
     .container {
       position: relative;
@@ -62,14 +53,14 @@
 
     h1 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(4rem, 10vw, 6rem);
+      font-size: clamp(3rem, 8vw, 6rem);
       font-weight: 400;
       color: #57534e;
       margin-bottom: 16px;
     }
 
     .subtitle {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: #78716c;
       max-width: 600px;
       margin: 0 auto;
@@ -79,78 +70,110 @@
     .letters {
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 22px;
     }
 
     .letter {
-      background: rgba(255, 255, 255, 0.72);
+      background: rgba(255, 255, 255, 0.75);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.7);
       border-radius: 28px;
-      padding: 28px;
-      transition: all 0.35s ease;
+      padding: 26px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      transition: all 0.35s ease;
     }
 
     .letter:hover {
       transform: translateY(-2px);
-      background: rgba(255,255,255,0.85);
+      background: rgba(255,255,255,0.88);
     }
 
-    details summary {
+    details {
+      transition: all 0.4s ease;
+    }
+
+    details[open] {
+      animation: openLetter 0.35s ease;
+    }
+
+    @keyframes openLetter {
+      from { opacity: 0.6; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    summary {
       list-style: none;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 20px;
+      gap: 16px;
     }
 
-    details summary::-webkit-details-marker {
+    summary::-webkit-details-marker {
       display: none;
     }
 
     .summary-left {
       display: flex;
       align-items: center;
-      gap: 18px;
+      gap: 16px;
     }
 
     .emoji {
-      font-size: 2rem;
+      font-size: 1.8rem;
     }
 
     .title {
-      font-size: 1.4rem;
+      font-size: 1.25rem;
       font-weight: 500;
-      color: #44403c;
     }
 
     .open-text {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: #a8a29e;
       font-style: italic;
     }
 
     .content {
-      margin-top: 24px;
-      padding-top: 24px;
+      margin-top: 20px;
+      padding-top: 20px;
       border-top: 1px solid rgba(214, 211, 209, 0.6);
-      line-height: 2;
-      color: #57534e;
-      font-size: 1.05rem;
+    }
+
+    .letter-image {
+      width: 100%;
+      border-radius: 18px;
+      margin-top: 18px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.5s ease;
+    }
+
+    .letter-image.loaded {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 18px;
+      flex-wrap: wrap;
     }
 
     .nav-button {
       border: none;
-      background: rgba(255,255,255,0.75);
+      background: rgba(255,255,255,0.78);
       backdrop-filter: blur(10px);
-      padding: 14px 24px;
+      padding: 12px 20px;
       border-radius: 999px;
-      font-size: 1rem;
+      font-size: 0.95rem;
       cursor: pointer;
       color: #57534e;
-      transition: all 0.3s ease;
+      transition: all 0.25s ease;
       box-shadow: 0 6px 20px rgba(0,0,0,0.05);
     }
 
@@ -159,19 +182,21 @@
       background: rgba(255,255,255,0.95);
     }
 
-    .letter-image {
-      width: 100%;
-      border-radius: 20px;
-      margin-top: 20px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    .nav-button:active {
+      transform: scale(0.96);
+    }
+
+    .nav-button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
     }
 
     .footer {
       margin-top: 80px;
       text-align: center;
       color: #a8a29e;
-      line-height: 1.8;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
+      line-height: 1.7;
     }
 
     .floating-heart {
@@ -183,72 +208,50 @@
     }
 
     @keyframes float {
-      from {
-        transform: translateY(100vh);
-        opacity: 0;
-      }
-      20% {
-        opacity: 0.15;
-      }
-      to {
-        transform: translateY(-120px);
-        opacity: 0;
-      }
+      from { transform: translateY(100vh); opacity: 0; }
+      20% { opacity: 0.15; }
+      to { transform: translateY(-120px); opacity: 0; }
     }
 
+    /* 🌿 MOBILE RESPONSIVENESS */
     @media (max-width: 768px) {
       .container {
-        padding: 60px 16px;
+        padding: 60px 14px;
+      }
+
+      h1 {
+        font-size: 3rem;
       }
 
       .letter {
-        padding: 22px;
+        padding: 20px;
       }
 
       .title {
         font-size: 1.1rem;
       }
 
-      .content {
+      .subtitle {
         font-size: 1rem;
-        line-height: 1.9;
+      }
+
+      .controls {
+        flex-direction: column;
+      }
+
+      .nav-button {
+        width: 100%;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .container {
+        max-width: 1000px;
       }
     }
   </style>
-  details {
-  transition: all 0.4s ease;
-}
-
-details[open] {
-  animation: openLetter 0.4s ease;
-}
-
-@keyframes openLetter {
-  from {
-    opacity: 0.6;
-    transform: scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.letter-image {
-  opacity: 0;
-  transform: translateY(8px);
-  transition: all 0.5s ease;
-}
-
-.letter-image.loaded {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.nav-button:active {
-  transform: scale(0.96);
-}
 </head>
+
 <body>
 
   <div class="glow glow-1"></div>
@@ -256,20 +259,14 @@ details[open] {
 
   <div class="container">
 
-    <section class="hero">
+    <div class="hero">
       <h1>Open When</h1>
       <p class="subtitle">
         A small place for the moments when the distance feels harder.
       </p>
-    </section>
-
-    <section class="letters" id="letters-container">
-    </section>
-
-    <div style="display:flex; justify-content:center; margin-top:40px; gap:16px;">
-      <button id="prevBtn" class="nav-button">← Previous</button>
-      <button id="nextBtn" class="nav-button">Next →</button>
     </div>
+
+    <section class="letters" id="letters-container"></section>
 
     <div class="footer">
       <p>Austria ↔ Costa Rica</p>
@@ -278,167 +275,101 @@ details[open] {
 
   </div>
 
-  <script>
-  const letters = [
-    {
-      title: 'Open when you miss me',
-      emoji: '💌',
-      images: [
-        'missme1.jpeg',
-        'missme2.jpeg'
-      ]
-    },
-    {
-      title: 'Open when you feel lonely',
-      emoji: '🌙',
-      images: [
-        'lonely1.jpeg',
-        'lonely2.jpeg'
-      ]
-    },
-    {
-      title: 'Open when you need reassurance',
-      emoji: '🤍',
-      images: [
-        'reassure1.jpeg',
-        'reassure2.jpeg'
-      ]
-    },
-    {
-      title: 'Open when you can’t sleep',
-      emoji: '✨',
-      images: [
-        'sleep1.jpeg',
-        'sleep2.jpeg'
-      ]
-    },
-    {
-      title: 'Open when you want to smile',
-      emoji: '☀️',
-      images: [
-        'smile1.jpeg',
-        'smile2.jpeg'
-      ]
-    },
-    {
-      title: 'Open when we have a difficult day',
-      emoji: '🫶',
-      images: [
-        'difficult1.jpeg',
-        'difficult2.jpeg'
-      ]
-    }
-  ];
+<script>
+const letters = [
+  { title:'Open when you miss me', emoji:'💌', images:['missme1.jpeg','missme2.jpeg'] },
+  { title:'Open when you feel lonely', emoji:'🌙', images:['lonely1.jpeg','lonely2.jpeg'] },
+  { title:'Open when you need reassurance', emoji:'🤍', images:['reassure1.jpeg','reassure2.jpeg'] },
+  { title:'Open when you can’t sleep', emoji:'✨', images:['sleep1.jpeg','sleep2.jpeg'] },
+  { title:'Open when you want to smile', emoji:'☀️', images:['smile1.jpeg','smile2.jpeg'] },
+  { title:'Open when we have a difficult day', emoji:'🫶', images:['difficult1.jpeg','difficult2.jpeg'] }
+];
 
-  const container = document.getElementById('letters-container');
+const container = document.getElementById('letters-container');
 
-  function renderLetters() {
-    container.innerHTML = '';
+function renderLetters() {
 
-    letters.forEach((letter, letterIndex) => {
+  container.innerHTML = '';
 
-      let currentImageIndex = 0;
+  letters.forEach((letter, i) => {
 
-      const letterElement = document.createElement('details');
-      letterElement.className = 'letter';
+    let index = 0;
 
-      letterElement.innerHTML = `
-        <summary>
-          <div class="summary-left">
-            <div class="emoji">${letter.emoji}</div>
-            <div class="title">${letter.title}</div>
-          </div>
+    const el = document.createElement('details');
+    el.className = 'letter';
 
-          <div class="open-text">open gently ✨</div>
-        </summary>
-
-        <div class="content">
-
-          <img 
-            src="${letter.images[currentImageIndex]}" 
-            class="letter-image"
-            id="image-${letterIndex}"
-          >
-
-          <div style="
-            display:flex;
-            justify-content:center;
-            gap:12px;
-            margin-top:20px;
-          ">
-
-            <button 
-              class="nav-button"
-              id="prev-${letterIndex}"
-            >
-              ← Previous
-            </button>
-
-            <button 
-              class="nav-button"
-              id="next-${letterIndex}"
-            >
-              Next →
-            </button>
-
-          </div>
-
+    el.innerHTML = `
+      <summary>
+        <div class="summary-left">
+          <div class="emoji">${letter.emoji}</div>
+          <div class="title">${letter.title}</div>
         </div>
-      `;
+        <div class="open-text">open gently ✨</div>
+      </summary>
 
-      container.appendChild(letterElement);
+      <div class="content">
+        <img class="letter-image" id="img-${i}" src="${letter.images[0]}">
 
-      const imageElement = document.getElementById(`image-${letterIndex}`);
-      const prevButton = document.getElementById(`prev-${letterIndex}`);
-      const nextButton = document.getElementById(`next-${letterIndex}`);
+        <div class="controls">
+          <button class="nav-button" id="prev-${i}">← Previous</button>
+          <button class="nav-button" id="next-${i}">Next →</button>
+        </div>
+      </div>
+    `;
 
-      function updateImage() {
-        imageElement.src = letter.images[currentImageIndex];
+    container.appendChild(el);
 
-        prevButton.disabled = currentImageIndex === 0;
-        nextButton.disabled = currentImageIndex === letter.images.length - 1;
+    const img = document.getElementById(`img-${i}`);
+    const prev = document.getElementById(`prev-${i}`);
+    const next = document.getElementById(`next-${i}`);
 
-        prevButton.style.opacity = currentImageIndex === 0 ? '0.4' : '1';
-        nextButton.style.opacity = currentImageIndex === letter.images.length - 1 ? '0.4' : '1';
+    function update() {
+      img.classList.remove('loaded');
+
+      setTimeout(() => {
+        img.src = letter.images[index];
+      }, 120);
+
+      img.onload = () => img.classList.add('loaded');
+
+      prev.disabled = index === 0;
+      next.disabled = index === letter.images.length - 1;
+    }
+
+    prev.onclick = () => {
+      if(index > 0) index--;
+      update();
+    };
+
+    next.onclick = () => {
+      if(index < letter.images.length - 1) index++;
+      update();
+    };
+
+    update();
+
+    el.addEventListener('toggle', () => {
+      if(el.open) {
+        document.querySelectorAll('details').forEach(d => {
+          if(d !== el) d.open = false;
+        });
       }
-
-      prevButton.addEventListener('click', () => {
-        if (currentImageIndex > 0) {
-          currentImageIndex--;
-          updateImage();
-        }
-      });
-
-      nextButton.addEventListener('click', () => {
-        if (currentImageIndex < letter.images.length - 1) {
-          currentImageIndex++;
-          updateImage();
-        }
-      });
-
-      updateImage();
     });
-  }
 
-  renderLetters();
+  });
+}
 
-  const createHeart = () => {
-    const heart = document.createElement('div');
-    heart.classList.add('floating-heart');
-    heart.innerHTML = '❤';
+renderLetters();
 
-    heart.style.left = Math.random() * 100 + 'vw';
-    heart.style.animationDuration = (8 + Math.random() * 8) + 's';
-    heart.style.fontSize = (10 + Math.random() * 12) + 'px';
-
-    document.body.appendChild(heart);
-
-    setTimeout(() => {
-      heart.remove();
-    }, 16000);
-  };
-
-  setInterval(createHeart, 1400);
+setInterval(() => {
+  const h = document.createElement('div');
+  h.className = 'floating-heart';
+  h.innerHTML = '❤';
+  h.style.left = Math.random()*100+'vw';
+  h.style.animationDuration = (8+Math.random()*8)+'s';
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),16000);
+},1400);
 </script>
 
 </body>
