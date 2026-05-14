@@ -1,0 +1,84 @@
+export default function OpenWhenSite() {
+  const letters = [
+    {
+      title: "Open when you miss me",
+      emoji: "💌",
+      content:
+        "I know the distance feels heavier sometimes. I’ve been stressed and exhausted lately, but I want you to know that none of that changed how close I feel to you. I still carry you through my days in little moments — when I hear a song you’d like, when I wish you were next to me, when I want to tell you something immediately. I miss your presence too. And even when I’m quiet or tired, my heart is still very much with you.",
+    },
+    {
+      title: "Open when you feel lonely",
+      emoji: "🌙",
+      content:
+        "If I could, I’d sit next to you right now and just hold you quietly for a while. I know a screen can’t replace closeness, but I hope this reminds you that you are deeply loved from very far away. We are building something real despite the distance, and I’m proud of us for that.",
+    },
+    {
+      title: "Open when you need reassurance",
+      emoji: "🤍",
+      content:
+        "Please don’t confuse my stress with emotional distance. I know I’ve seemed overwhelmed lately, but you are not the reason. You are one of the safest and warmest parts of my life. Even on difficult days, I never stop choosing you.",
+    },
+    {
+      title: "Open when you can’t sleep",
+      emoji: "✨",
+      content:
+        "Imagine me lying next to you right now, playing with your hair and telling you about my day until you slowly fall asleep. One day this distance will only be a memory we talk about. Until then, I hope you can feel my love wrapped around you tonight.",
+    },
+    {
+      title: "Open when you want to smile",
+      emoji: "☀️",
+      content:
+        "You are genuinely one of my favorite people in the world. I love your laugh, your heart, your warmth, and the way you make life feel softer. Also, I still smile thinking about our random conversations and inside jokes. You make my life brighter even from another continent.",
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-rose-100 via-orange-50 to-amber-100 text-stone-800 p-6 md:p-12">
+      <div className="max-w-4xl mx-auto relative">
+        <div className="absolute top-10 left-0 w-72 h-72 bg-rose-200/40 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 right-0 w-72 h-72 bg-amber-200/40 rounded-full blur-3xl"></div>
+        <div className="text-center mb-12 relative">
+          <div className="absolute inset-0 blur-3xl opacity-30 bg-rose-200 rounded-full"></div>
+          <h1 className="relative text-5xl md:text-6xl font-light tracking-wide mb-4 text-stone-700">
+            Open When
+          </h1>
+          <p className="relative text-stone-500 text-lg max-w-2xl mx-auto leading-relaxed">
+            A small place for the moments when the distance feels harder.
+          </p>
+        </div>
+
+        <div className="grid gap-6">
+          {letters.map((letter, index) => (
+            <details
+              key={index}
+              className="bg-white/70 border border-rose-200/60 rounded-3xl p-6 backdrop-blur-sm transition-all duration-300 hover:bg-white/90 shadow-lg shadow-rose-100/50"
+            >
+              <summary className="cursor-pointer list-none flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <span className="text-3xl">{letter.emoji}</span>
+                  <h2 className="text-xl md:text-2xl font-medium">
+                    {letter.title}
+                  </h2>
+                </div>
+                <span className="text-stone-400 text-sm italic">open gently ✨</span>
+              </summary>
+
+              <div className="mt-6 pt-6 border-t border-rose-200/50">
+                <p className="text-lg leading-8 text-stone-700 whitespace-pre-line">
+                  {letter.content}
+                </p>
+              </div>
+            </details>
+          ))}
+        </div>
+
+        <div className="mt-16 text-center text-stone-500 text-sm pb-10">
+          <p>
+            Austria ↔ Costa Rica
+          </p>
+          <p className="mt-2">Distance changes nothing important ✨</p>
+        </div>
+      </div>
+    </div>
+  );
+}
