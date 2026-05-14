@@ -215,6 +215,39 @@
       }
     }
   </style>
+  details {
+  transition: all 0.4s ease;
+}
+
+details[open] {
+  animation: openLetter 0.4s ease;
+}
+
+@keyframes openLetter {
+  from {
+    opacity: 0.6;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.letter-image {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.5s ease;
+}
+
+.letter-image.loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.nav-button:active {
+  transform: scale(0.96);
+}
 </head>
 <body>
 
