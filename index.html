@@ -246,133 +246,167 @@
   </div>
 
   <script>
-    const letters = [
-      {
-        title: 'Open when you miss me',
-        emoji: '💌',
-        images: [
+  const letters = [
+    {
+      title: 'Open when you miss me',
+      emoji: '💌',
+      images: [
         'missme1.png',
         'missme2.png'
       ]
-      },
-      {
-        title: 'Open when you feel lonely',
-        emoji: '🌙',
-        images: [
+    },
+    {
+      title: 'Open when you feel lonely',
+      emoji: '🌙',
+      images: [
         'lonely1.png',
         'lonely2.png'
       ]
-      },
-      {
-        title: 'Open when you need reassurance',
-        emoji: '🤍',
-        images: [
+    },
+    {
+      title: 'Open when you need reassurance',
+      emoji: '🤍',
+      images: [
         'reassure1.png',
         'reassure2.png'
       ]
-      },
-      {
-        title: 'Open when you can’t sleep',
-        emoji: '✨',
-        images: [
+    },
+    {
+      title: 'Open when you can’t sleep',
+      emoji: '✨',
+      images: [
         'sleep1.png',
         'sleep2.png'
       ]
-      },
-      {
-        title: 'Open when you want to smile',
-        emoji: '☀️',
-        images: [
+    },
+    {
+      title: 'Open when you want to smile',
+      emoji: '☀️',
+      images: [
         'smile1.png',
         'smile2.png'
       ]
-      },
-      {
-        title: 'Open when we have a difficult day',
-        emoji: '🫶',
-        images: [
+    },
+    {
+      title: 'Open when we have a difficult day',
+      emoji: '🫶',
+      images: [
         'difficult1.png',
         'difficult2.png'
       ]
+    }
+  ];
+
+  const container = document.getElementById('letters-container');
+
+  function renderLetters() {
+    container.innerHTML = '';
+
+    letters.forEach((letter, letterIndex) => {
+
+      let currentImageIndex = 0;
+
+      const letterElement = document.createElement('details');
+      letterElement.className = 'letter';
+
+      letterElement.innerHTML = `
+        <summary>
+          <div class="summary-left">
+            <div class="emoji">${letter.emoji}</div>
+            <div class="title">${letter.title}</div>
+          </div>
+
+          <div class="open-text">open gently ✨</div>
+        </summary>
+
+        <div class="content">
+
+          <img 
+            src="${letter.images[currentImageIndex]}" 
+            class="letter-image"
+            id="image-${letterIndex}"
+          >
+
+          <div style="
+            display:flex;
+            justify-content:center;
+            gap:12px;
+            margin-top:20px;
+          ">
+
+            <button 
+              class="nav-button"
+              id="prev-${letterIndex}"
+            >
+              ← Previous
+            </button>
+
+            <button 
+              class="nav-button"
+              id="next-${letterIndex}"
+            >
+              Next →
+            </button>
+
+          </div>
+
+        </div>
+      `;
+
+      container.appendChild(letterElement);
+
+      const imageElement = document.getElementById(`image-${letterIndex}`);
+      const prevButton = document.getElementById(`prev-${letterIndex}`);
+      const nextButton = document.getElementById(`next-${letterIndex}`);
+
+      function updateImage() {
+        imageElement.src = letter.images[currentImageIndex];
+
+        prevButton.disabled = currentImageIndex === 0;
+        nextButton.disabled = currentImageIndex === letter.images.length - 1;
+
+        prevButton.style.opacity = currentImageIndex === 0 ? '0.4' : '1';
+        nextButton.style.opacity = currentImageIndex === letter.images.length - 1 ? '0.4' : '1';
       }
-    ];
 
-    const lettersPerPage = 2;
-    let currentPage = Math.floor((letters.length - 1) / lettersPerPage);
-
-    const container = document.getElementById('letters-container');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-
-    function renderLetters() {
-      container.innerHTML = '';
-
-      const start = currentPage * lettersPerPage;
-      const end = start + lettersPerPage;
-      const visibleLetters = letters.slice(start, end);
-
-      visibleLetters.forEach(letter => {
-        const letterElement = document.createElement('details');
-        letterElement.className = 'letter';
-
-        letterElement.innerHTML = `
-          <summary>
-            <div class="summary-left">
-              <div class="emoji">${letter.emoji}</div>
-              <div class="title">${letter.title}</div>
-            </div>
-            <div class="open-text">open gently ✨</div>
-          </summary>
-
-          <img src="${letter.image}" alt="${letter.title}" class="letter-image">
-        `;
-
-        container.appendChild(letterElement);
+      prevButton.addEventListener('click', () => {
+        if (currentImageIndex > 0) {
+          currentImageIndex--;
+          updateImage();
+        }
       });
 
-      prevBtn.disabled = currentPage === 0;
-      nextBtn.disabled = end >= letters.length;
+      nextButton.addEventListener('click', () => {
+        if (currentImageIndex < letter.images.length - 1) {
+          currentImageIndex++;
+          updateImage();
+        }
+      });
 
-      prevBtn.style.opacity = currentPage === 0 ? '0.4' : '1';
-      nextBtn.style.opacity = end >= letters.length ? '0.4' : '1';
-    }
-
-    prevBtn.addEventListener('click', () => {
-      if (currentPage > 0) {
-        currentPage--;
-        renderLetters();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      updateImage();
     });
+  }
 
-    nextBtn.addEventListener('click', () => {
-      if ((currentPage + 1) * lettersPerPage < letters.length) {
-        currentPage++;
-        renderLetters();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    });
+  renderLetters();
 
-    renderLetters();
+  const createHeart = () => {
+    const heart = document.createElement('div');
+    heart.classList.add('floating-heart');
+    heart.innerHTML = '❤';
 
-    const createHeart = () => {
-      const heart = document.createElement('div');
-      heart.classList.add('floating-heart');
-      heart.innerHTML = '❤';
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.animationDuration = (8 + Math.random() * 8) + 's';
+    heart.style.fontSize = (10 + Math.random() * 12) + 'px';
 
-      heart.style.left = Math.random() * 100 + 'vw';
-      heart.style.animationDuration = (8 + Math.random() * 8) + 's';
-      heart.style.fontSize = (10 + Math.random() * 12) + 'px';
+    document.body.appendChild(heart);
 
-      document.body.appendChild(heart);
+    setTimeout(() => {
+      heart.remove();
+    }, 16000);
+  };
 
-      setTimeout(() => {
-        heart.remove();
-      }, 16000);
-    };
-
-    setInterval(createHeart, 1400);
-  </script>
+  setInterval(createHeart, 1400);
+</script>
 
 </body>
 </html>
