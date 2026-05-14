@@ -19,86 +19,119 @@
     body {
       min-height: 100vh;
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(to bottom, #fff1f2, #fffbeb, #fefce8);
+      background: radial-gradient(circle at top, #fff7ed, #fff1f2 40%, #fefce8);
       color: #44403c;
       overflow-x: hidden;
       position: relative;
     }
 
-    .glow {
+    /* 🌿 LAYERS FOR PARALLAX */
+    .layer {
       position: fixed;
-      width: 400px;
-      height: 400px;
-      border-radius: 50%;
-      filter: blur(90px);
-      opacity: 0.35;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
       z-index: 0;
+      transition: transform 0.2s ease-out;
     }
 
-    .glow-1 { background: #fecdd3; top: -100px; left: -100px; }
-    .glow-2 { background: #fde68a; bottom: -100px; right: -100px; }
+    /* 🕯️ CANDLE GLOW LAYERS */
+    .glow {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.25;
+      animation: flicker 6s infinite ease-in-out;
+    }
+
+    .glow-1 {
+      background: #fecdd3;
+      top: -120px;
+      left: -120px;
+    }
+
+    .glow-2 {
+      background: #fde68a;
+      bottom: -150px;
+      right: -120px;
+      animation-delay: 2s;
+    }
+
+    .glow-3 {
+      background: #ffffff;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.12;
+      animation-delay: 1s;
+    }
+
+    @keyframes flicker {
+      0%, 100% { opacity: 0.18; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(1.08); }
+      70% { opacity: 0.22; }
+    }
 
     .container {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       max-width: 900px;
       margin: 0 auto;
-      padding: 80px 20px;
+      padding: 90px 20px;
     }
 
     .hero {
       text-align: center;
-      margin-bottom: 60px;
+      margin-bottom: 70px;
     }
 
     h1 {
       font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(3rem, 8vw, 6rem);
+      font-size: clamp(3.2rem, 8vw, 6rem);
       font-weight: 400;
       color: #57534e;
-      margin-bottom: 16px;
+      letter-spacing: 1px;
     }
 
     .subtitle {
+      margin-top: 14px;
       font-size: 1.05rem;
       color: #78716c;
       max-width: 600px;
-      margin: 0 auto;
+      margin-inline: auto;
       line-height: 1.8;
     }
 
+    /* 🌿 GRID LAYOUT (more designed feel) */
     .letters {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 1fr;
       gap: 22px;
     }
 
+    @media (min-width: 900px) {
+      .letters {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
     .letter {
-      background: rgba(255, 255, 255, 0.75);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.7);
       border-radius: 28px;
-      padding: 26px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-      transition: all 0.35s ease;
+      padding: 22px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.05);
+      transition: transform 0.25s ease, background 0.25s ease;
     }
 
     .letter:hover {
-      transform: translateY(-2px);
-      background: rgba(255,255,255,0.88);
-    }
-
-    details {
-      transition: all 0.4s ease;
-    }
-
-    details[open] {
-      animation: openLetter 0.35s ease;
-    }
-
-    @keyframes openLetter {
-      from { opacity: 0.6; transform: scale(0.98); }
-      to { opacity: 1; transform: scale(1); }
+      transform: translateY(-4px);
+      background: rgba(255,255,255,0.9);
     }
 
     summary {
@@ -107,7 +140,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }
 
     summary::-webkit-details-marker {
@@ -117,15 +150,15 @@
     .summary-left {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
     }
 
     .emoji {
-      font-size: 1.8rem;
+      font-size: 1.7rem;
     }
 
     .title {
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       font-weight: 500;
     }
 
@@ -136,19 +169,19 @@
     }
 
     .content {
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(214, 211, 209, 0.6);
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(214, 211, 209, 0.5);
     }
 
     .letter-image {
       width: 100%;
       border-radius: 18px;
-      margin-top: 18px;
+      margin-top: 14px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.08);
       opacity: 0;
-      transform: translateY(8px);
-      transition: all 0.5s ease;
+      transform: translateY(10px);
+      transition: all 0.6s ease;
     }
 
     .letter-image.loaded {
@@ -160,26 +193,23 @@
       display: flex;
       justify-content: center;
       gap: 12px;
-      margin-top: 18px;
-      flex-wrap: wrap;
+      margin-top: 16px;
     }
 
     .nav-button {
       border: none;
-      background: rgba(255,255,255,0.78);
+      background: rgba(255,255,255,0.8);
       backdrop-filter: blur(10px);
-      padding: 12px 20px;
+      padding: 10px 18px;
       border-radius: 999px;
-      font-size: 0.95rem;
       cursor: pointer;
       color: #57534e;
-      transition: all 0.25s ease;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+      transition: all 0.2s ease;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.05);
     }
 
     .nav-button:hover {
       transform: translateY(-2px);
-      background: rgba(255,255,255,0.95);
     }
 
     .nav-button:active {
@@ -192,61 +222,21 @@
     }
 
     .footer {
-      margin-top: 80px;
+      margin-top: 90px;
       text-align: center;
       color: #a8a29e;
       font-size: 0.9rem;
       line-height: 1.7;
     }
 
-    .floating-heart {
-      position: fixed;
-      font-size: 14px;
-      opacity: 0.15;
-      animation: float 12s linear infinite;
-      z-index: 0;
-    }
-
-    @keyframes float {
-      from { transform: translateY(100vh); opacity: 0; }
-      20% { opacity: 0.15; }
-      to { transform: translateY(-120px); opacity: 0; }
-    }
-
-    /* 🌿 MOBILE RESPONSIVENESS */
+    /* MOBILE */
     @media (max-width: 768px) {
       .container {
-        padding: 60px 14px;
+        padding: 60px 16px;
       }
 
-      h1 {
-        font-size: 3rem;
-      }
-
-      .letter {
-        padding: 20px;
-      }
-
-      .title {
-        font-size: 1.1rem;
-      }
-
-      .subtitle {
-        font-size: 1rem;
-      }
-
-      .controls {
-        flex-direction: column;
-      }
-
-      .nav-button {
-        width: 100%;
-      }
-    }
-
-    @media (min-width: 1200px) {
-      .container {
-        max-width: 1000px;
+      .letters {
+        grid-template-columns: 1fr;
       }
     }
   </style>
@@ -254,26 +244,31 @@
 
 <body>
 
+<!-- 🌿 PARALLAX LAYERS -->
+<div class="layer" id="layer1">
   <div class="glow glow-1"></div>
   <div class="glow glow-2"></div>
+</div>
 
-  <div class="container">
+<div class="layer" id="layer2">
+  <div class="glow glow-3"></div>
+</div>
 
-    <div class="hero">
-      <h1>Open When</h1>
-      <p class="subtitle">
-        A small place for the moments when the distance feels harder.
-      </p>
-    </div>
+<div class="container">
 
-    <section class="letters" id="letters-container"></section>
-
-    <div class="footer">
-      <p>Austria ↔ Costa Rica</p>
-      <p>Distance changes nothing important ✨</p>
-    </div>
-
+  <div class="hero">
+    <h1>Open When</h1>
+    <p class="subtitle">A small place for the moments when the distance feels harder.</p>
   </div>
+
+  <div class="letters" id="letters-container"></div>
+
+  <div class="footer">
+    Austria ↔ Costa Rica<br/>
+    Distance changes nothing important ✨
+  </div>
+
+</div>
 
 <script>
 const letters = [
@@ -287,13 +282,11 @@ const letters = [
 
 const container = document.getElementById('letters-container');
 
-function renderLetters() {
-
+function render() {
   container.innerHTML = '';
 
-  letters.forEach((letter, i) => {
-
-    let index = 0;
+  letters.forEach((l, i) => {
+    let idx = 0;
 
     const el = document.createElement('details');
     el.className = 'letter';
@@ -301,18 +294,18 @@ function renderLetters() {
     el.innerHTML = `
       <summary>
         <div class="summary-left">
-          <div class="emoji">${letter.emoji}</div>
-          <div class="title">${letter.title}</div>
+          <div class="emoji">${l.emoji}</div>
+          <div class="title">${l.title}</div>
         </div>
         <div class="open-text">open gently ✨</div>
       </summary>
 
       <div class="content">
-        <img class="letter-image" id="img-${i}" src="${letter.images[0]}">
+        <img class="letter-image" id="img-${i}" src="${l.images[0]}">
 
         <div class="controls">
-          <button class="nav-button" id="prev-${i}">← Previous</button>
-          <button class="nav-button" id="next-${i}">Next →</button>
+          <button class="nav-button" id="prev-${i}">←</button>
+          <button class="nav-button" id="next-${i}">→</button>
         </div>
       </div>
     `;
@@ -326,25 +319,16 @@ function renderLetters() {
     function update() {
       img.classList.remove('loaded');
 
-      setTimeout(() => {
-        img.src = letter.images[index];
-      }, 120);
+      setTimeout(() => img.src = l.images[idx], 120);
 
       img.onload = () => img.classList.add('loaded');
 
-      prev.disabled = index === 0;
-      next.disabled = index === letter.images.length - 1;
+      prev.disabled = idx === 0;
+      next.disabled = idx === l.images.length - 1;
     }
 
-    prev.onclick = () => {
-      if(index > 0) index--;
-      update();
-    };
-
-    next.onclick = () => {
-      if(index < letter.images.length - 1) index++;
-      update();
-    };
+    prev.onclick = () => { if(idx>0){idx--; update();} };
+    next.onclick = () => { if(idx<l.images.length-1){idx++; update();} };
 
     update();
 
@@ -355,21 +339,19 @@ function renderLetters() {
         });
       }
     });
-
   });
 }
 
-renderLetters();
+render();
 
-setInterval(() => {
-  const h = document.createElement('div');
-  h.className = 'floating-heart';
-  h.innerHTML = '❤';
-  h.style.left = Math.random()*100+'vw';
-  h.style.animationDuration = (8+Math.random()*8)+'s';
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),16000);
-},1400);
+/* 🌿 PARALLAX */
+document.addEventListener('mousemove', (e) => {
+  const x = (e.clientX / window.innerWidth - 0.5) * 20;
+  const y = (e.clientY / window.innerHeight - 0.5) * 20;
+
+  document.getElementById('layer1').style.transform = `translate(${x}px, ${y}px)`;
+  document.getElementById('layer2').style.transform = `translate(${-x}px, ${-y}px)`;
+});
 </script>
 
 </body>
