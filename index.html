@@ -141,6 +141,31 @@
       font-size: 1.05rem;
     }
 
+    .nav-button {
+      border: none;
+      background: rgba(255,255,255,0.75);
+      backdrop-filter: blur(10px);
+      padding: 14px 24px;
+      border-radius: 999px;
+      font-size: 1rem;
+      cursor: pointer;
+      color: #57534e;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+    }
+
+    .nav-button:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.95);
+    }
+
+    .letter-image {
+      width: 100%;
+      border-radius: 20px;
+      margin-top: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
     .footer {
       margin-top: 80px;
       text-align: center;
@@ -205,101 +230,13 @@
       </p>
     </section>
 
-    <section class="letters">
-
-      <details class="letter">
-        <summary>
-          <div class="summary-left">
-            <div class="emoji">💌</div>
-            <div class="title">Open when you miss me</div>
-          </div>
-          <div class="open-text">open gently ✨</div>
-        </summary>
-
-        <div class="content">
-          I know the distance feels heavier sometimes. I’ve been stressed and exhausted lately, but I want you to know that none of that changed how close I feel to you.
-          <br><br>
-          I still carry you through my days in little moments — when I hear a song you’d like, when I wish you were next to me, when I want to tell you something immediately.
-          <br><br>
-          I miss your presence too. And even when I’m quiet or tired, my heart is still very much with you.
-        </div>
-      </details>
-
-      <details class="letter">
-        <summary>
-          <div class="summary-left">
-            <div class="emoji">🌙</div>
-            <div class="title">Open when you feel lonely</div>
-          </div>
-          <div class="open-text">open gently ✨</div>
-        </summary>
-
-        <div class="content">
-          If I could, I’d sit next to you right now and just hold you quietly for a while.
-          <br><br>
-          I know a screen can’t replace closeness, but I hope this reminds you that you are deeply loved from very far away.
-          <br><br>
-          We are building something real despite the distance, and I’m proud of us for that.
-        </div>
-      </details>
-
-      <details class="letter">
-        <summary>
-          <div class="summary-left">
-            <div class="emoji">🤍</div>
-            <div class="title">Open when you need reassurance</div>
-          </div>
-          <div class="open-text">open gently ✨</div>
-        </summary>
-
-        <div class="content">
-          Please don’t confuse my stress with emotional distance.
-          <br><br>
-          I know I’ve seemed overwhelmed lately, but you are not the reason.
-          <br><br>
-          You are one of the safest and warmest parts of my life. Even on difficult days, I never stop choosing you.
-        </div>
-      </details>
-
-      <details class="letter">
-        <summary>
-          <div class="summary-left">
-            <div class="emoji">✨</div>
-            <div class="title">Open when you can’t sleep</div>
-          </div>
-          <div class="open-text">open gently ✨</div>
-        </summary>
-
-        <div class="content">
-          Imagine me lying next to you right now, playing with your hair and telling you about my day until you slowly fall asleep.
-          <br><br>
-          One day this distance will only be a memory we talk about.
-          <br><br>
-          Until then, I hope you can feel my love wrapped around you tonight.
-        </div>
-      </details>
-
-      <details class="letter">
-        <summary>
-          <div class="summary-left">
-            <div class="emoji">☀️</div>
-            <div class="title">Open when you want to smile</div>
-          </div>
-          <div class="open-text">open gently ✨</div>
-        </summary>
-
-        <div class="content">
-          You are genuinely one of my favorite people in the world.
-          <br><br>
-          I love your laugh, your heart, your warmth, and the way you make life feel softer.
-          <br><br>
-          Also, I still smile thinking about our random conversations and inside jokes.
-          <br><br>
-          You make my life brighter even from another continent.
-        </div>
-      </details>
-
+    <section class="letters" id="letters-container">
     </section>
+
+    <div style="display:flex; justify-content:center; margin-top:40px; gap:16px;">
+      <button id="prevBtn" class="nav-button">← Previous</button>
+      <button id="nextBtn" class="nav-button">Next →</button>
+    </div>
 
     <div class="footer">
       <p>Austria ↔ Costa Rica</p>
@@ -309,6 +246,97 @@
   </div>
 
   <script>
+    const letters = [
+      {
+        title: 'Open when you miss me',
+        emoji: '💌',
+        image: 'letter1.png'
+      },
+      {
+        title: 'Open when you feel lonely',
+        emoji: '🌙',
+        image: 'letter2.png'
+      },
+      {
+        title: 'Open when you need reassurance',
+        emoji: '🤍',
+        image: 'letter3.png'
+      },
+      {
+        title: 'Open when you can’t sleep',
+        emoji: '✨',
+        image: 'letter4.png'
+      },
+      {
+        title: 'Open when you want to smile',
+        emoji: '☀️',
+        image: 'letter5.png'
+      },
+      {
+        title: 'Open when we have a difficult day',
+        emoji: '🫶',
+        image: 'letter6.png'
+      }
+    ];
+
+    const lettersPerPage = 2;
+    let currentPage = Math.floor((letters.length - 1) / lettersPerPage);
+
+    const container = document.getElementById('letters-container');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function renderLetters() {
+      container.innerHTML = '';
+
+      const start = currentPage * lettersPerPage;
+      const end = start + lettersPerPage;
+      const visibleLetters = letters.slice(start, end);
+
+      visibleLetters.forEach(letter => {
+        const letterElement = document.createElement('details');
+        letterElement.className = 'letter';
+
+        letterElement.innerHTML = `
+          <summary>
+            <div class="summary-left">
+              <div class="emoji">${letter.emoji}</div>
+              <div class="title">${letter.title}</div>
+            </div>
+            <div class="open-text">open gently ✨</div>
+          </summary>
+
+          <img src="${letter.image}" alt="${letter.title}" class="letter-image">
+        `;
+
+        container.appendChild(letterElement);
+      });
+
+      prevBtn.disabled = currentPage === 0;
+      nextBtn.disabled = end >= letters.length;
+
+      prevBtn.style.opacity = currentPage === 0 ? '0.4' : '1';
+      nextBtn.style.opacity = end >= letters.length ? '0.4' : '1';
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if (currentPage > 0) {
+        currentPage--;
+        renderLetters();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if ((currentPage + 1) * lettersPerPage < letters.length) {
+        currentPage++;
+        renderLetters();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+
+    renderLetters();
+
     const createHeart = () => {
       const heart = document.createElement('div');
       heart.classList.add('floating-heart');
