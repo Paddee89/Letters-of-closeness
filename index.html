@@ -1,84 +1,332 @@
-export default function OpenWhenSite() {
-  const letters = [
-    {
-      title: "Open when you miss me",
-      emoji: "💌",
-      content:
-        "I know the distance feels heavier sometimes. I’ve been stressed and exhausted lately, but I want you to know that none of that changed how close I feel to you. I still carry you through my days in little moments — when I hear a song you’d like, when I wish you were next to me, when I want to tell you something immediately. I miss your presence too. And even when I’m quiet or tired, my heart is still very much with you.",
-    },
-    {
-      title: "Open when you feel lonely",
-      emoji: "🌙",
-      content:
-        "If I could, I’d sit next to you right now and just hold you quietly for a while. I know a screen can’t replace closeness, but I hope this reminds you that you are deeply loved from very far away. We are building something real despite the distance, and I’m proud of us for that.",
-    },
-    {
-      title: "Open when you need reassurance",
-      emoji: "🤍",
-      content:
-        "Please don’t confuse my stress with emotional distance. I know I’ve seemed overwhelmed lately, but you are not the reason. You are one of the safest and warmest parts of my life. Even on difficult days, I never stop choosing you.",
-    },
-    {
-      title: "Open when you can’t sleep",
-      emoji: "✨",
-      content:
-        "Imagine me lying next to you right now, playing with your hair and telling you about my day until you slowly fall asleep. One day this distance will only be a memory we talk about. Until then, I hope you can feel my love wrapped around you tonight.",
-    },
-    {
-      title: "Open when you want to smile",
-      emoji: "☀️",
-      content:
-        "You are genuinely one of my favorite people in the world. I love your laugh, your heart, your warmth, and the way you make life feel softer. Also, I still smile thinking about our random conversations and inside jokes. You make my life brighter even from another continent.",
-    },
-  ];
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Open When</title>
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-rose-100 via-orange-50 to-amber-100 text-stone-800 p-6 md:p-12">
-      <div className="max-w-4xl mx-auto relative">
-        <div className="absolute top-10 left-0 w-72 h-72 bg-rose-200/40 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 right-0 w-72 h-72 bg-amber-200/40 rounded-full blur-3xl"></div>
-        <div className="text-center mb-12 relative">
-          <div className="absolute inset-0 blur-3xl opacity-30 bg-rose-200 rounded-full"></div>
-          <h1 className="relative text-5xl md:text-6xl font-light tracking-wide mb-4 text-stone-700">
-            Open When
-          </h1>
-          <p className="relative text-stone-500 text-lg max-w-2xl mx-auto leading-relaxed">
-            A small place for the moments when the distance feels harder.
-          </p>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom, #fff1f2, #fffbeb, #fefce8);
+      color: #44403c;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .glow {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.35;
+      z-index: 0;
+    }
+
+    .glow-1 {
+      background: #fecdd3;
+      top: -100px;
+      left: -100px;
+    }
+
+    .glow-2 {
+      background: #fde68a;
+      bottom: -100px;
+      right: -100px;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 20px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4rem, 10vw, 6rem);
+      font-weight: 400;
+      color: #57534e;
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #78716c;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    .letters {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .letter {
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 28px;
+      padding: 28px;
+      transition: all 0.35s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+    }
+
+    .letter:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.85);
+    }
+
+    details summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .summary-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .emoji {
+      font-size: 2rem;
+    }
+
+    .title {
+      font-size: 1.4rem;
+      font-weight: 500;
+      color: #44403c;
+    }
+
+    .open-text {
+      font-size: 0.9rem;
+      color: #a8a29e;
+      font-style: italic;
+    }
+
+    .content {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(214, 211, 209, 0.6);
+      line-height: 2;
+      color: #57534e;
+      font-size: 1.05rem;
+    }
+
+    .footer {
+      margin-top: 80px;
+      text-align: center;
+      color: #a8a29e;
+      line-height: 1.8;
+      font-size: 0.95rem;
+    }
+
+    .floating-heart {
+      position: fixed;
+      font-size: 14px;
+      opacity: 0.15;
+      animation: float 12s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes float {
+      from {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+      20% {
+        opacity: 0.15;
+      }
+      to {
+        transform: translateY(-120px);
+        opacity: 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 60px 16px;
+      }
+
+      .letter {
+        padding: 22px;
+      }
+
+      .title {
+        font-size: 1.1rem;
+      }
+
+      .content {
+        font-size: 1rem;
+        line-height: 1.9;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+
+  <div class="container">
+
+    <section class="hero">
+      <h1>Open When</h1>
+      <p class="subtitle">
+        A small place for the moments when the distance feels harder.
+      </p>
+    </section>
+
+    <section class="letters">
+
+      <details class="letter">
+        <summary>
+          <div class="summary-left">
+            <div class="emoji">💌</div>
+            <div class="title">Open when you miss me</div>
+          </div>
+          <div class="open-text">open gently ✨</div>
+        </summary>
+
+        <div class="content">
+          I know the distance feels heavier sometimes. I’ve been stressed and exhausted lately, but I want you to know that none of that changed how close I feel to you.
+          <br><br>
+          I still carry you through my days in little moments — when I hear a song you’d like, when I wish you were next to me, when I want to tell you something immediately.
+          <br><br>
+          I miss your presence too. And even when I’m quiet or tired, my heart is still very much with you.
         </div>
+      </details>
 
-        <div className="grid gap-6">
-          {letters.map((letter, index) => (
-            <details
-              key={index}
-              className="bg-white/70 border border-rose-200/60 rounded-3xl p-6 backdrop-blur-sm transition-all duration-300 hover:bg-white/90 shadow-lg shadow-rose-100/50"
-            >
-              <summary className="cursor-pointer list-none flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <span className="text-3xl">{letter.emoji}</span>
-                  <h2 className="text-xl md:text-2xl font-medium">
-                    {letter.title}
-                  </h2>
-                </div>
-                <span className="text-stone-400 text-sm italic">open gently ✨</span>
-              </summary>
+      <details class="letter">
+        <summary>
+          <div class="summary-left">
+            <div class="emoji">🌙</div>
+            <div class="title">Open when you feel lonely</div>
+          </div>
+          <div class="open-text">open gently ✨</div>
+        </summary>
 
-              <div className="mt-6 pt-6 border-t border-rose-200/50">
-                <p className="text-lg leading-8 text-stone-700 whitespace-pre-line">
-                  {letter.content}
-                </p>
-              </div>
-            </details>
-          ))}
+        <div class="content">
+          If I could, I’d sit next to you right now and just hold you quietly for a while.
+          <br><br>
+          I know a screen can’t replace closeness, but I hope this reminds you that you are deeply loved from very far away.
+          <br><br>
+          We are building something real despite the distance, and I’m proud of us for that.
         </div>
+      </details>
 
-        <div className="mt-16 text-center text-stone-500 text-sm pb-10">
-          <p>
-            Austria ↔ Costa Rica
-          </p>
-          <p className="mt-2">Distance changes nothing important ✨</p>
+      <details class="letter">
+        <summary>
+          <div class="summary-left">
+            <div class="emoji">🤍</div>
+            <div class="title">Open when you need reassurance</div>
+          </div>
+          <div class="open-text">open gently ✨</div>
+        </summary>
+
+        <div class="content">
+          Please don’t confuse my stress with emotional distance.
+          <br><br>
+          I know I’ve seemed overwhelmed lately, but you are not the reason.
+          <br><br>
+          You are one of the safest and warmest parts of my life. Even on difficult days, I never stop choosing you.
         </div>
-      </div>
+      </details>
+
+      <details class="letter">
+        <summary>
+          <div class="summary-left">
+            <div class="emoji">✨</div>
+            <div class="title">Open when you can’t sleep</div>
+          </div>
+          <div class="open-text">open gently ✨</div>
+        </summary>
+
+        <div class="content">
+          Imagine me lying next to you right now, playing with your hair and telling you about my day until you slowly fall asleep.
+          <br><br>
+          One day this distance will only be a memory we talk about.
+          <br><br>
+          Until then, I hope you can feel my love wrapped around you tonight.
+        </div>
+      </details>
+
+      <details class="letter">
+        <summary>
+          <div class="summary-left">
+            <div class="emoji">☀️</div>
+            <div class="title">Open when you want to smile</div>
+          </div>
+          <div class="open-text">open gently ✨</div>
+        </summary>
+
+        <div class="content">
+          You are genuinely one of my favorite people in the world.
+          <br><br>
+          I love your laugh, your heart, your warmth, and the way you make life feel softer.
+          <br><br>
+          Also, I still smile thinking about our random conversations and inside jokes.
+          <br><br>
+          You make my life brighter even from another continent.
+        </div>
+      </details>
+
+    </section>
+
+    <div class="footer">
+      <p>Austria ↔ Costa Rica</p>
+      <p>Distance changes nothing important ✨</p>
     </div>
-  );
-}
+
+  </div>
+
+  <script>
+    const createHeart = () => {
+      const heart = document.createElement('div');
+      heart.classList.add('floating-heart');
+      heart.innerHTML = '❤';
+
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (8 + Math.random() * 8) + 's';
+      heart.style.fontSize = (10 + Math.random() * 12) + 'px';
+
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 16000);
+    };
+
+    setInterval(createHeart, 1400);
+  </script>
+
+</body>
+</html>
