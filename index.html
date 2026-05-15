@@ -1,235 +1,357 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Open When</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Open When</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
-<style>
-body {
-  margin:0;
-  font-family:Inter;
-  background: radial-gradient(circle at top,#fff7ed,#fff1f2 40%,#fefce8);
-  color:#44403c;
-}
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-.container {
-  max-width:900px;
-  margin:auto;
-  padding:60px 20px;
-}
+    body {
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top, #fff7ed, #fff1f2 40%, #fefce8);
+      color: #44403c;
+      overflow-x: hidden;
+      position: relative;
+    }
 
-h1 {
-  font-family:Cormorant Garamond;
-  font-size:3rem;
-  text-align:center;
-}
+    /* 🌿 LAYERS FOR PARALLAX */
+    .layer {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 0;
+      transition: transform 0.2s ease-out;
+    }
 
-.subtitle {
-  text-align:center;
-  color:#78716c;
-  margin-bottom:40px;
-}
+    /* 🕯️ CANDLE GLOW LAYERS */
+    .glow {
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.25;
+      animation: flicker 6s infinite ease-in-out;
+    }
 
-/* THEMES */
-.theme {
-  background:rgba(255,255,255,0.75);
-  border-radius:20px;
-  padding:20px;
-  margin-bottom:20px;
-  cursor:pointer;
-  box-shadow:0 10px 25px rgba(0,0,0,0.05);
-}
+    .glow-1 {
+      background: #fecdd3;
+      top: -120px;
+      left: -120px;
+    }
 
-.theme:hover {
-  transform:translateY(-2px);
-}
+    .glow-2 {
+      background: #fde68a;
+      bottom: -150px;
+      right: -120px;
+      animation-delay: 2s;
+    }
 
-/* VIEW */
-#viewer {
-  display:none;
-  margin-top:30px;
-}
+    .glow-3 {
+      background: #ffffff;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.12;
+      animation-delay: 1s;
+    }
 
-.back {
-  margin-bottom:20px;
-  cursor:pointer;
-  color:#78716c;
-}
+    @keyframes flicker {
+      0%, 100% { opacity: 0.18; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(1.08); }
+      70% { opacity: 0.22; }
+    }
 
-/* TABS */
-.tabs {
-  display:flex;
-  gap:10px;
-  margin-bottom:20px;
-  flex-wrap:wrap;
-}
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 90px 20px;
+    }
 
-.tab {
-  padding:8px 14px;
-  border-radius:999px;
-  background:white;
-  cursor:pointer;
-  box-shadow:0 5px 15px rgba(0,0,0,0.05);
-}
+    .hero {
+      text-align: center;
+      margin-bottom: 70px;
+    }
 
-.tab.active {
-  background:#fde68a;
-}
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.2rem, 8vw, 6rem);
+      font-weight: 400;
+      color: #57534e;
+      letter-spacing: 1px;
+    }
 
-/* CARD */
-.card {
-  background:white;
-  padding:20px;
-  border-radius:20px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.05);
-}
+    .subtitle {
+      margin-top: 14px;
+      font-size: 1.05rem;
+      color: #78716c;
+      max-width: 600px;
+      margin-inline: auto;
+      line-height: 1.8;
+    }
 
-img, video {
-  width:100%;
-  border-radius:12px;
-  margin-top:10px;
-}
+    /* 🌿 GRID LAYOUT (more designed feel) */
+    .letters {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 22px;
+    }
 
-/* UPLOAD */
-.upload {
-  margin-top:10px;
-}
-</style>
+    @media (min-width: 900px) {
+      .letters {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .letter {
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.7);
+      border-radius: 28px;
+      padding: 22px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.05);
+      transition: transform 0.25s ease, background 0.25s ease;
+    }
+
+    .letter:hover {
+      transform: translateY(-4px);
+      background: rgba(255,255,255,0.9);
+    }
+
+    summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .summary-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .emoji {
+      font-size: 1.7rem;
+    }
+
+    .title {
+      font-size: 1.15rem;
+      font-weight: 500;
+    }
+
+    .open-text {
+      font-size: 0.85rem;
+      color: #a8a29e;
+      font-style: italic;
+    }
+
+    .content {
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(214, 211, 209, 0.5);
+    }
+
+    .letter-image {
+      width: 100%;
+      border-radius: 18px;
+      margin-top: 14px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.6s ease;
+    }
+
+    .letter-image.loaded {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .nav-button {
+      border: none;
+      background: rgba(255,255,255,0.8);
+      backdrop-filter: blur(10px);
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      color: #57534e;
+      transition: all 0.2s ease;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+    }
+
+    .nav-button:hover {
+      transform: translateY(-2px);
+    }
+
+    .nav-button:active {
+      transform: scale(0.96);
+    }
+
+    .nav-button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .footer {
+      margin-top: 90px;
+      text-align: center;
+      color: #a8a29e;
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    /* MOBILE */
+    @media (max-width: 768px) {
+      .container {
+        padding: 60px 16px;
+      }
+
+      .letters {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
+<!-- 🌿 PARALLAX LAYERS -->
+<div class="layer" id="layer1">
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+</div>
+
+<div class="layer" id="layer2">
+  <div class="glow glow-3"></div>
+</div>
+
 <div class="container">
 
-<h1>Open When</h1>
-<div class="subtitle">A small place for distance</div>
-
-<!-- THEMES -->
-<div id="themes"></div>
-
-<!-- VIEW -->
-<div id="viewer">
-
-  <div class="back" onclick="closeViewer()">← Back</div>
-
-  <div class="tabs">
-    <div class="tab active" onclick="switchTab('nancy')">For Nancy</div>
-    <div class="tab" onclick="switchTab('patrick')">For Patrick</div>
-    <div class="tab" onclick="switchTab('both')">For Both</div>
+  <div class="hero">
+    <h1>Open When</h1>
+    <p class="subtitle">A small place for the moments when the distance feels harder.</p>
   </div>
 
-  <div class="card" id="content"></div>
+  <div class="letters" id="letters-container"></div>
 
-</div>
+  <div class="footer">
+    Austria ↔ Costa Rica<br/>
+    Distance changes nothing important ✨
+  </div>
 
 </div>
 
 <script>
-
-const themes = [
-  { id:"miss", title:"Open when you miss me" },
-  { id:"lonely", title:"Open when you feel lonely" },
-  { id:"reassure", title:"Open when you need reassurance" },
-  { id:"sleep", title:"Open when you can't sleep" },
-  { id:"smile", title:"Open when you want to smile" },
-  { id:"hard", title:"Open when we have a difficult day" }
+const letters = [
+  { title:'Open when you miss me', emoji:'💌', images:['missme1.jpeg','missme2.jpeg'] },
+  { title:'Open when you feel lonely', emoji:'🌙', images:['lonely1.jpeg','lonely2.jpeg'] },
+  { title:'Open when you need reassurance', emoji:'🤍', images:['reassure1.jpeg','reassure2.jpeg'] },
+  { title:'Open when you can’t sleep', emoji:'✨', images:['sleep1.jpeg','sleep2.jpeg'] },
+  { title:'Open when you want to smile', emoji:'☀️', images:['smile1.jpeg','smile2.jpeg'] },
+  { title:'Open when we have a difficult day', emoji:'🫶', images:['difficult1.jpeg','difficult2.jpeg'] }
 ];
 
-const state = {
-  currentTheme:null,
-  currentTab:"nancy"
-};
+const container = document.getElementById('letters-container');
 
-/* STORAGE */
-function getData(key){
-  return JSON.parse(localStorage.getItem(key) || "[]");
-}
-function setData(key,val){
-  localStorage.setItem(key, JSON.stringify(val));
-}
+function render() {
+  container.innerHTML = '';
 
-/* RENDER THEMES */
-const themesDiv = document.getElementById("themes");
+  letters.forEach((l, i) => {
+    let idx = 0;
 
-themes.forEach(t=>{
-  const el = document.createElement("div");
-  el.className="theme";
-  el.innerText=t.title;
+    const el = document.createElement('details');
+    el.className = 'letter';
 
-  el.onclick=()=>openTheme(t);
+    el.innerHTML = `
+      <summary>
+        <div class="summary-left">
+          <div class="emoji">${l.emoji}</div>
+          <div class="title">${l.title}</div>
+        </div>
+        <div class="open-text">open gently ✨</div>
+      </summary>
 
-  themesDiv.appendChild(el);
-});
+      <div class="content">
+        <img class="letter-image" id="img-${i}" src="${l.images[0]}">
 
-/* OPEN THEME */
-function openTheme(theme){
-  state.currentTheme = theme.id;
-  document.getElementById("viewer").style.display="block";
-  render();
-}
+        <div class="controls">
+          <button class="nav-button" id="prev-${i}">←</button>
+          <button class="nav-button" id="next-${i}">→</button>
+        </div>
+      </div>
+    `;
 
-/* CLOSE */
-function closeViewer(){
-  document.getElementById("viewer").style.display="none";
-}
+    container.appendChild(el);
 
-/* TAB SWITCH */
-function switchTab(tab){
-  state.currentTab = tab;
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  event.target.classList.add("active");
-  render();
-}
+    const img = document.getElementById(`img-${i}`);
+    const prev = document.getElementById(`prev-${i}`);
+    const next = document.getElementById(`next-${i}`);
 
-/* RENDER CONTENT */
-function render(){
+    function update() {
+      img.classList.remove('loaded');
 
-  const key = `${state.currentTheme}-${state.currentTab}`;
-  const data = getData(key);
+      setTimeout(() => img.src = l.images[idx], 120);
 
-  const container = document.getElementById("content");
+      img.onload = () => img.classList.add('loaded');
 
-  container.innerHTML = `
-
-    <div>
-      <strong>${state.currentTheme} → ${state.currentTab}</strong>
-    </div>
-
-    <input type="file" multiple id="upload">
-
-    <div id="media"></div>
-  `;
-
-  const media = document.getElementById("media");
-
-  data.forEach(src=>{
-
-    if(src.endsWith(".mp4")){
-      media.innerHTML += `<video controls src="${src}"></video>`;
-    }
-    else{
-      media.innerHTML += `<img src="${src}">`;
+      prev.disabled = idx === 0;
+      next.disabled = idx === l.images.length - 1;
     }
 
-  });
+    prev.onclick = () => { if(idx>0){idx--; update();} };
+    next.onclick = () => { if(idx<l.images.length-1){idx++; update();} };
 
-  document.getElementById("upload").onchange = (e)=>{
+    update();
 
-    const files = [...e.target.files];
-
-    files.forEach(f=>{
-      const url = URL.createObjectURL(f);
-      data.push(url);
+    el.addEventListener('toggle', () => {
+      if(el.open) {
+        document.querySelectorAll('details').forEach(d => {
+          if(d !== el) d.open = false;
+        });
+      }
     });
-
-    setData(key,data);
-    render();
-  };
+  });
 }
 
+render();
+
+/* 🌿 PARALLAX */
+document.addEventListener('mousemove', (e) => {
+  const x = (e.clientX / window.innerWidth - 0.5) * 20;
+  const y = (e.clientY / window.innerHeight - 0.5) * 20;
+
+  document.getElementById('layer1').style.transform = `translate(${x}px, ${y}px)`;
+  document.getElementById('layer2').style.transform = `translate(${-x}px, ${-y}px)`;
+});
 </script>
 
 </body>
