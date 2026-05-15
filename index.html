@@ -20,7 +20,7 @@ body {
   overflow-x:hidden;
 }
 
-/* 🌿 PARALLAX LAYERS */
+/* BACKGROUND */
 .layer {
   position:fixed;
   inset:0;
@@ -28,7 +28,6 @@ body {
   z-index:0;
 }
 
-/* 🕯️ GLOW */
 .glow {
   position:absolute;
   width:500px;
@@ -41,14 +40,12 @@ body {
 
 .glow-1 { background:#fecdd3; top:-120px; left:-120px; }
 .glow-2 { background:#fde68a; bottom:-120px; right:-120px; animation-delay:2s; }
-.glow-3 { background:white; top:40%; left:50%; transform:translate(-50%,-50%); opacity:0.12; animation-delay:1s; }
 
 @keyframes flicker {
   0%,100% { opacity:0.18; transform:scale(1); }
   50% { opacity:0.3; transform:scale(1.08); }
 }
 
-/* LAYOUT */
 .container {
   position:relative;
   z-index:2;
@@ -73,18 +70,29 @@ h1 {
   color:#78716c;
 }
 
-/* CATEGORY */
-.category-block {
-  margin-bottom:70px;
+/* THEME */
+.theme {
+  margin-bottom:80px;
 }
 
-.category-title {
+.theme-title {
   font-family:'Cormorant Garamond', serif;
-  font-size:2rem;
+  font-size:2.2rem;
   margin-bottom:20px;
 }
 
-/* LETTERS GRID */
+/* SUBCATEGORIES */
+.sub {
+  margin-bottom:50px;
+}
+
+.sub-title {
+  font-size:1.2rem;
+  margin-bottom:15px;
+  color:#57534e;
+}
+
+/* LETTER GRID */
 .letters {
   display:grid;
   grid-template-columns:1fr;
@@ -95,20 +103,17 @@ h1 {
   .letters { grid-template-columns:1fr 1fr; }
 }
 
-/* LETTER CARD */
 .letter {
   background:rgba(255,255,255,0.8);
-  backdrop-filter:blur(10px);
   border-radius:24px;
   padding:20px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.05);
+  backdrop-filter:blur(10px);
 }
 
 summary {
   cursor:pointer;
   display:flex;
   justify-content:space-between;
-  align-items:center;
   list-style:none;
 }
 
@@ -124,27 +129,28 @@ summary::-webkit-details-marker { display:none; }
 
 .title { font-weight:500; }
 
-.open-text { font-size:0.8rem; color:#aaa; }
-
 .content {
   margin-top:15px;
   border-top:1px solid #eee;
   padding-top:15px;
 }
 
-/* IMAGE */
 .letter-image {
   width:100%;
   border-radius:16px;
-  margin-top:12px;
-  opacity:0;
-  transform:translateY(10px);
-  transition:0.5s;
+  margin-top:10px;
 }
 
-.letter-image.loaded {
-  opacity:1;
-  transform:translateY(0);
+/* UPLOAD */
+.upload {
+  margin-top:12px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.upload input {
+  font-size:0.8rem;
 }
 
 /* BUTTONS */
@@ -152,11 +158,11 @@ summary::-webkit-details-marker { display:none; }
   display:flex;
   justify-content:center;
   gap:10px;
-  margin-top:12px;
+  margin-top:10px;
 }
 
-.nav-button {
-  padding:10px 16px;
+button {
+  padding:8px 14px;
   border:none;
   border-radius:999px;
   background:white;
@@ -170,50 +176,46 @@ summary::-webkit-details-marker { display:none; }
   margin-top:80px;
   color:#aaa;
 }
-
-/* MOBILE */
-@media(max-width:768px){
-  .container { padding:60px 15px; }
-}
 </style>
 </head>
 
 <body>
 
-<div class="layer" id="layer1">
+<div class="layer">
   <div class="glow glow-1"></div>
   <div class="glow glow-2"></div>
 </div>
 
-<div class="layer" id="layer2">
-  <div class="glow glow-3"></div>
-</div>
-
 <div class="container">
 
-  <div class="hero">
-    <h1>Open When</h1>
-    <div class="subtitle">A small place for distance.</div>
-  </div>
+<div class="hero">
+  <h1>Open When</h1>
+  <div class="subtitle">A small place for the moments when the distance feels harder.</div>
+</div>
 
-  <div class="category-block">
-    <div class="category-title">For Nancy</div>
+<!-- THEME 1 -->
+<div class="theme">
+  <div class="theme-title">Distance Days</div>
+
+  <div class="sub">
+    <div class="sub-title">For Nancy</div>
     <div class="letters" id="nancy"></div>
   </div>
 
-  <div class="category-block">
-    <div class="category-title">For Patrick</div>
+  <div class="sub">
+    <div class="sub-title">For Patrick</div>
     <div class="letters" id="patrick"></div>
   </div>
 
-  <div class="category-block">
-    <div class="category-title">For Both</div>
+  <div class="sub">
+    <div class="sub-title">For Both</div>
     <div class="letters" id="both"></div>
   </div>
+</div>
 
-  <div class="footer">
-    Austria ↔ Costa Rica ✨
-  </div>
+<div class="footer">
+  Austria ↔ Costa Rica ✨
+</div>
 
 </div>
 
@@ -232,16 +234,21 @@ const data = {
   both: []
 };
 
+/* store uploads in memory */
+const uploads = {};
+
 function render(id, list){
 
   const container = document.getElementById(id);
 
   list.forEach((l,i)=>{
 
-    let idx=0;
+    let idx = 0;
 
-    const el=document.createElement('details');
+    const el = document.createElement('details');
     el.className='letter';
+
+    uploads[`${id}-${i}`] = [];
 
     el.innerHTML=`
       <summary>
@@ -249,43 +256,51 @@ function render(id, list){
           <div class="emoji">${l.emoji}</div>
           <div class="title">${l.title}</div>
         </div>
-        <div class="open-text">open gently</div>
       </summary>
 
       <div class="content">
+
         <img class="letter-image" id="${id}-img-${i}" src="${l.images[0]}">
 
         <div class="controls">
           <button id="${id}-p-${i}">←</button>
           <button id="${id}-n-${i}">→</button>
         </div>
+
+        <div class="upload">
+          <input type="file" accept="image/*,video/*,audio/*" id="${id}-upload-${i}">
+        </div>
+
       </div>
     `;
 
     container.appendChild(el);
 
-    const img=document.getElementById(`${id}-img-${i}`);
-    const p=document.getElementById(`${id}-p-${i}`);
-    const n=document.getElementById(`${id}-n-${i}`);
+    const img = document.getElementById(`${id}-img-${i}`);
+    const p = document.getElementById(`${id}-p-${i}`);
+    const n = document.getElementById(`${id}-n-${i}`);
+    const up = document.getElementById(`${id}-upload-${i}`);
 
     function update(){
-      img.classList.remove('loaded');
-      setTimeout(()=>img.src=l.images[idx],100);
-      img.onload=()=>img.classList.add('loaded');
+      img.src = l.images[idx];
     }
 
-    p.onclick=()=>{if(idx>0){idx--;update();}};
-    n.onclick=()=>{if(idx<l.images.length-1){idx++;update();}};
+    p.onclick=()=>{ if(idx>0){ idx--; update(); } };
+    n.onclick=()=>{ if(idx<l.images.length-1){ idx++; update(); } };
+
+    up.addEventListener('change', (e)=>{
+      const file = e.target.files[0];
+      if(!file) return;
+
+      const url = URL.createObjectURL(file);
+      uploads[`${id}-${i}`].push(url);
+
+      l.images.push(url);
+      idx = l.images.length - 1;
+      update();
+    });
 
     update();
-
-    el.addEventListener('toggle',()=>{
-      if(el.open){
-        document.querySelectorAll('details').forEach(d=>{
-          if(d!==el)d.open=false;
-        });
-      }
-    });
 
   });
 }
@@ -293,15 +308,6 @@ function render(id, list){
 render('nancy',data.nancy);
 render('patrick',data.patrick);
 render('both',data.both);
-
-/* 🌿 PARALLAX */
-document.addEventListener('mousemove',(e)=>{
-  const x=(e.clientX/window.innerWidth-0.5)*20;
-  const y=(e.clientY/window.innerHeight-0.5)*20;
-
-  document.getElementById('layer1').style.transform=`translate(${x}px,${y}px)`;
-  document.getElementById('layer2').style.transform=`translate(${-x}px,${-y}px)`;
-});
 
 </script>
 
