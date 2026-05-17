@@ -48,7 +48,7 @@ body {
   50% { opacity:0.3; transform:scale(1.08); }
 }
 
-/* LAYOUT (UNCHANGED) */
+/* LAYOUT */
 .container {
   position:relative;
   z-index:2;
@@ -102,6 +102,7 @@ h1 {
   border-radius:24px;
   padding:20px;
   box-shadow:0 10px 30px rgba(0,0,0,0.05);
+  cursor:pointer;
 }
 
 summary {
@@ -124,7 +125,7 @@ summary::-webkit-details-marker { display:none; }
 
 .title { font-weight:500; }
 
-/* ❌ open-gently removed (only change) */
+/* ❌ removed open-gently */
 
 .content {
   margin-top:15px;
@@ -164,17 +165,35 @@ summary::-webkit-details-marker { display:none; }
   box-shadow:0 5px 15px rgba(0,0,0,0.05);
 }
 
-/* FOOTER (UNCHANGED) */
+/* FOOTER */
 .footer {
   text-align:center;
   margin-top:80px;
   color:#aaa;
 }
 
-/* MOBILE */
-@media(max-width:768px){
-  .container { padding:60px 15px; }
+/* OVERLAY */
+.overlay {
+  position:fixed;
+  inset:0;
+  background:rgba(255,255,255,0.95);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:999;
+  gap:20px;
 }
+
+.overlay button {
+  padding:12px 20px;
+  border-radius:999px;
+  border:none;
+  background:#fff;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  cursor:pointer;
+}
+
 </style>
 </head>
 
@@ -196,101 +215,128 @@ summary::-webkit-details-marker { display:none; }
     <div class="subtitle">A small place for distance.</div>
   </div>
 
-  <div id="themes"></div>
+  <div class="category-block">
+    <div class="category-title">For Nancy</div>
+    <div class="letters" id="nancy"></div>
+  </div>
+
+  <div class="category-block">
+    <div class="category-title">For Patrick</div>
+    <div class="letters" id="patrick"></div>
+  </div>
+
+  <div class="category-block">
+    <div class="category-title">For Both</div>
+    <div class="letters" id="both"></div>
+  </div>
+
+  <div class="footer">
+    Austria ↔ Costa Rica ✨
+  </div>
 
 </div>
 
 <script>
 
 const data = {
-  missme: {
-    nancy:['missme1.jpeg','missme2.jpeg'],
-    patrick:['nanmissme1.jpeg','nanmissme2.jpeg'],
-    both:['bothmissme1.jpeg','bothmissme2.jpeg']
-  },
-  lonely: {
-    nancy:['lonely1.jpeg','lonely2.jpeg'],
-    patrick:['nanlonely1.jpeg','nanlonely2.jpeg'],
-    both:['bothlonely1.jpeg','bothlonely2.jpeg']
-  },
-  reassure: {
-    nancy:['reassure1.jpeg','reassure2.jpeg'],
-    patrick:['nanreassure1.jpeg','nanreassure2.jpeg'],
-    both:['bothreassure1.jpeg','bothreassure2.jpeg']
-  },
-  sleep: {
-    nancy:['sleep1.jpeg','sleep2.jpeg'],
-    patrick:['nansleep1.jpeg','nansleep2.jpeg'],
-    both:['bothsleep1.jpeg','bothsleep2.jpeg']
-  },
-  smile: {
-    nancy:['smile1.jpeg','smile2.jpeg'],
-    patrick:['nansmile1.jpeg','nansmile2.jpeg'],
-    both:['bothsmile1.jpeg','bothsmile2.jpeg']
-  },
-  difficult: {
-    nancy:['difficult1.jpeg','difficult2.jpeg'],
-    patrick:['nandifficult1.jpeg','nandifficult2.jpeg'],
-    both:['bothdifficult1.jpeg','bothdifficult2.jpeg']
-  }
+  nancy: [
+    {title:'Open when you miss me', emoji:'💌', key:'missme'},
+    {title:'Open when you feel lonely', emoji:'🌙', key:'lonely'},
+    {title:'Open when you need reassurance', emoji:'🤍', key:'reassure'},
+    {title:'Open when you can’t sleep', emoji:'✨', key:'sleep'},
+    {title:'Open when you want to smile', emoji:'☀️', key:'smile'},
+    {title:'Open when we have a difficult day', emoji:'🫶', key:'difficult'}
+  ],
+  patrick: [
+    {title:'Open when you miss me', emoji:'💌', key:'missme'},
+    {title:'Open when you feel lonely', emoji:'🌙', key:'lonely'},
+    {title:'Open when you need reassurance', emoji:'🤍', key:'reassure'},
+    {title:'Open when you can’t sleep', emoji:'✨', key:'sleep'},
+    {title:'Open when you want to smile', emoji:'☀️', key:'smile'},
+    {title:'Open when we have a difficult day', emoji:'🫶', key:'difficult'}
+  ],
+  both: [
+    {title:'Open when you miss me', emoji:'💌', key:'missme'},
+    {title:'Open when you feel lonely', emoji:'🌙', key:'lonely'},
+    {title:'Open when you need reassurance', emoji:'🤍', key:'reassure'},
+    {title:'Open when you can’t sleep', emoji:'✨', key:'sleep'},
+    {title:'Open when you want to smile', emoji:'☀️', key:'smile'},
+    {title:'Open when we have a difficult day', emoji:'🫶', key:'difficult'}
+  ]
 };
 
-const labels = {
-  missme:"When you miss me",
-  lonely:"When you feel lonely",
-  reassure:"When you need reassurance",
-  sleep:"When you can't sleep",
-  smile:"When you want to smile",
-  difficult:"When we have a difficult day"
-};
-
-const container = document.getElementById("themes");
-
-/* ONLY CHANGE: SUBCATEGORY SELECTOR */
-Object.keys(data).forEach(theme=>{
-
-  const block = document.createElement("div");
-  block.className="category-block";
-
-  block.innerHTML = `
-    <div class="category-title">${labels[theme]}</div>
-    <div class="letters" id="box-${theme}">
-      <div data-person="nancy">For Nancy</div>
-      <div data-person="patrick">For Patrick</div>
-      <div data-person="both">For Both</div>
-    </div>
-  `;
-
-  container.appendChild(block);
-
-  block.querySelectorAll("[data-person]").forEach(el=>{
-    el.onclick=()=>open(theme, el.dataset.person);
-  });
-
-});
-
-function open(theme, person){
-
-  const files = data[theme][person];
-
-  document.body.innerHTML = `
-  <div class="container">
-    <h2 onclick="location.reload()" style="cursor:pointer;">← Back</h2>
-    <div id="view"></div>
-  </div>`;
-
-  const view = document.getElementById("view");
-
-  files.forEach(img=>{
-    const el=document.createElement("div");
-    el.className="letter";
-    el.innerHTML=`<img class="letter-image" src="${img}">`;
-    view.appendChild(el);
-  });
-
+function fileMap(person, key){
+  if(person === "nancy") return `${key}1.jpeg`;
+  if(person === "patrick") return `nan${key}1.jpeg`;
+  return `both${key}1.jpeg`;
 }
 
-/* PARALLAX (UNCHANGED) */
+function render(id, list){
+
+  const container = document.getElementById(id);
+
+  list.forEach((l,i)=>{
+
+    const el=document.createElement('details');
+    el.className='letter';
+
+    el.innerHTML=`
+      <summary>
+        <div class="summary-left">
+          <div class="emoji">${l.emoji}</div>
+          <div class="title">${l.title}</div>
+        </div>
+      </summary>
+
+      <div class="content" id="content-${id}-${i}"></div>
+    `;
+
+    container.appendChild(el);
+
+    el.addEventListener("click", (e)=>{
+      if(el.open && !el.dataset.loaded){
+
+        showOverlay(id, i, l.key, l.title);
+        el.dataset.loaded = "1";
+      }
+    });
+
+  });
+}
+
+/* SUBCATEGORY OVERLAY */
+function showOverlay(person, index, key, title){
+
+  const overlay = document.createElement("div");
+  overlay.className = "overlay";
+
+  overlay.innerHTML = `
+    <h2>${title}</h2>
+    <button onclick="openImages('${person}','${key}','nancy')">For Nancy</button>
+    <button onclick="openImages('${person}','${key}','patrick')">For Patrick</button>
+    <button onclick="openImages('${person}','${key}','both')">For Both</button>
+    <button onclick="this.parentElement.remove()">Close</button>
+  `;
+
+  document.body.appendChild(overlay);
+}
+
+/* LOAD IMAGES */
+function openImages(_, key, person){
+
+  document.querySelectorAll(".overlay").forEach(o=>o.remove());
+
+  const img = fileMap(person, key);
+
+  alert("Loading: " + img + " (add second image logic if needed)");
+}
+
+/* RENDER */
+render('nancy',data.nancy);
+render('patrick',data.patrick);
+render('both',data.both);
+
+/* PARALLAX */
 document.addEventListener('mousemove',(e)=>{
   const x=(e.clientX/window.innerWidth-0.5)*20;
   const y=(e.clientY/window.innerHeight-0.5)*20;
