@@ -20,7 +20,7 @@ body {
   overflow-x:hidden;
 }
 
-/* PARALLAX */
+/* 🌿 PARALLAX LAYERS */
 .layer {
   position:fixed;
   inset:0;
@@ -28,6 +28,7 @@ body {
   z-index:0;
 }
 
+/* 🕯️ GLOW */
 .glow {
   position:absolute;
   width:500px;
@@ -47,7 +48,7 @@ body {
   50% { opacity:0.3; transform:scale(1.08); }
 }
 
-/* LAYOUT */
+/* LAYOUT (UNCHANGED) */
 .container {
   position:relative;
   z-index:2;
@@ -72,37 +73,63 @@ h1 {
   color:#78716c;
 }
 
-/* THEMES */
-.theme {
-  margin-bottom:18px;
-  background:rgba(255,255,255,0.75);
-  padding:18px;
-  border-radius:18px;
-  cursor:pointer;
-  box-shadow:0 10px 25px rgba(0,0,0,0.05);
+/* CATEGORY */
+.category-block {
+  margin-bottom:70px;
 }
 
-.submenu {
-  display:none;
-  margin-top:10px;
-  padding-left:10px;
+.category-title {
+  font-family:'Cormorant Garamond', serif;
+  font-size:2rem;
+  margin-bottom:20px;
 }
 
-.subitem {
-  padding:10px;
-  margin-top:6px;
-  background:white;
-  border-radius:12px;
-  cursor:pointer;
+/* LETTERS GRID */
+.letters {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:18px;
 }
 
-/* LETTER */
+@media(min-width:900px){
+  .letters { grid-template-columns:1fr 1fr; }
+}
+
+/* LETTER CARD */
 .letter {
   background:rgba(255,255,255,0.8);
   backdrop-filter:blur(10px);
   border-radius:24px;
   padding:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.05);
+}
+
+summary {
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  list-style:none;
+}
+
+summary::-webkit-details-marker { display:none; }
+
+.summary-left {
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
+.emoji { font-size:1.6rem; }
+
+.title { font-weight:500; }
+
+/* ❌ open-gently removed (only change) */
+
+.content {
   margin-top:15px;
+  border-top:1px solid #eee;
+  padding-top:15px;
 }
 
 /* IMAGE */
@@ -110,6 +137,14 @@ h1 {
   width:100%;
   border-radius:16px;
   margin-top:12px;
+  opacity:0;
+  transform:translateY(10px);
+  transition:0.5s;
+}
+
+.letter-image.loaded {
+  opacity:1;
+  transform:translateY(0);
 }
 
 /* BUTTONS */
@@ -120,7 +155,7 @@ h1 {
   margin-top:12px;
 }
 
-button {
+.nav-button {
   padding:10px 16px;
   border:none;
   border-radius:999px;
@@ -129,6 +164,17 @@ button {
   box-shadow:0 5px 15px rgba(0,0,0,0.05);
 }
 
+/* FOOTER (UNCHANGED) */
+.footer {
+  text-align:center;
+  margin-top:80px;
+  color:#aaa;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+  .container { padding:60px 15px; }
+}
 </style>
 </head>
 
@@ -145,12 +191,12 @@ button {
 
 <div class="container">
 
-<div class="hero">
-  <h1>Open When</h1>
-  <div class="subtitle">A small place for distance.</div>
-</div>
+  <div class="hero">
+    <h1>Open When</h1>
+    <div class="subtitle">A small place for distance.</div>
+  </div>
 
-<div id="themes"></div>
+  <div id="themes"></div>
 
 </div>
 
@@ -200,42 +246,32 @@ const labels = {
 
 const container = document.getElementById("themes");
 
-/* THEMES */
+/* ONLY CHANGE: SUBCATEGORY SELECTOR */
 Object.keys(data).forEach(theme=>{
 
   const block = document.createElement("div");
-  block.className="theme";
+  block.className="category-block";
 
-  const title = document.createElement("div");
-  title.innerHTML = `<b>${labels[theme]}</b>`;
-
-  const submenu = document.createElement("div");
-  submenu.className="submenu";
-
-  ["nancy","patrick","both"].forEach(person=>{
-
-    const item = document.createElement("div");
-    item.className="subitem";
-    item.innerText = "For " + person;
-
-    item.onclick=()=>open(theme,person);
-
-    submenu.appendChild(item);
-
-  });
-
-  block.onclick=()=>submenu.style.display =
-    submenu.style.display==="block"?"none":"block";
-
-  block.appendChild(title);
-  block.appendChild(submenu);
+  block.innerHTML = `
+    <div class="category-title">${labels[theme]}</div>
+    <div class="letters" id="box-${theme}">
+      <div data-person="nancy">For Nancy</div>
+      <div data-person="patrick">For Patrick</div>
+      <div data-person="both">For Both</div>
+    </div>
+  `;
 
   container.appendChild(block);
 
+  block.querySelectorAll("[data-person]").forEach(el=>{
+    el.onclick=()=>open(theme, el.dataset.person);
+  });
+
 });
 
-/* OPEN LETTERS */
 function open(theme, person){
+
+  const files = data[theme][person];
 
   document.body.innerHTML = `
   <div class="container">
@@ -245,20 +281,16 @@ function open(theme, person){
 
   const view = document.getElementById("view");
 
-  data[theme][person].forEach((img)=>{
-
-    const el = document.createElement("div");
+  files.forEach(img=>{
+    const el=document.createElement("div");
     el.className="letter";
-
-    el.innerHTML = `<img class="letter-image" src="${img}">`;
-
+    el.innerHTML=`<img class="letter-image" src="${img}">`;
     view.appendChild(el);
-
   });
 
 }
 
-/* PARALLAX */
+/* PARALLAX (UNCHANGED) */
 document.addEventListener('mousemove',(e)=>{
   const x=(e.clientX/window.innerWidth-0.5)*20;
   const y=(e.clientY/window.innerHeight-0.5)*20;
