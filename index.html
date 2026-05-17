@@ -73,35 +73,49 @@ h1 {
   color:#78716c;
 }
 
-/* CATEGORY */
-.category-block {
-  margin-bottom:70px;
+/* THEMES */
+.theme {
+  margin-bottom:18px;
+  background:rgba(255,255,255,0.75);
+  padding:18px;
+  border-radius:18px;
+  cursor:pointer;
+  box-shadow:0 10px 25px rgba(0,0,0,0.05);
 }
 
-.category-title {
-  font-family:'Cormorant Garamond', serif;
-  font-size:2rem;
-  margin-bottom:20px;
+.submenu {
+  display:none;
+  margin-top:10px;
+  padding-left:10px;
 }
 
-/* LETTERS GRID */
+.subitem {
+  padding:10px;
+  margin-top:6px;
+  background:white;
+  border-radius:12px;
+  cursor:pointer;
+  box-shadow:0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* LETTER GRID */
 .letters {
   display:grid;
   grid-template-columns:1fr;
   gap:18px;
+  margin-top:30px;
 }
 
 @media(min-width:900px){
   .letters { grid-template-columns:1fr 1fr; }
 }
 
-/* LETTER CARD */
+/* LETTER */
 .letter {
   background:rgba(255,255,255,0.8);
   backdrop-filter:blur(10px);
   border-radius:24px;
   padding:20px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.05);
 }
 
 summary {
@@ -124,15 +138,12 @@ summary::-webkit-details-marker { display:none; }
 
 .title { font-weight:500; }
 
-/* ❌ REMOVED open-text COMPLETELY */
-
 .content {
   margin-top:15px;
   border-top:1px solid #eee;
   padding-top:15px;
 }
 
-/* IMAGE */
 .letter-image {
   width:100%;
   border-radius:16px;
@@ -147,7 +158,6 @@ summary::-webkit-details-marker { display:none; }
   transform:translateY(0);
 }
 
-/* BUTTONS */
 .controls {
   display:flex;
   justify-content:center;
@@ -155,7 +165,7 @@ summary::-webkit-details-marker { display:none; }
   margin-top:12px;
 }
 
-.nav-button {
+button {
   padding:10px 16px;
   border:none;
   border-radius:999px;
@@ -164,17 +174,12 @@ summary::-webkit-details-marker { display:none; }
   box-shadow:0 5px 15px rgba(0,0,0,0.05);
 }
 
-/* FOOTER */
 .footer {
   text-align:center;
   margin-top:80px;
   color:#aaa;
 }
 
-/* MOBILE */
-@media(max-width:768px){
-  .container { padding:60px 15px; }
-}
 </style>
 </head>
 
@@ -191,126 +196,126 @@ summary::-webkit-details-marker { display:none; }
 
 <div class="container">
 
-  <div class="hero">
-    <h1>Open When</h1>
-    <div class="subtitle">A small place for distance.</div>
-  </div>
+<div class="hero">
+  <h1>Open When</h1>
+  <div class="subtitle">A small place for distance.</div>
+</div>
 
-  <div class="category-block">
-    <div class="category-title">For Nancy</div>
-    <div class="letters" id="nancy"></div>
-  </div>
-
-  <div class="category-block">
-    <div class="category-title">For Patrick</div>
-    <div class="letters" id="patrick"></div>
-  </div>
-
-  <div class="category-block">
-    <div class="category-title">For Both</div>
-    <div class="letters" id="both"></div>
-  </div>
-
-  <div class="footer">
-    Austria ↔ Costa Rica ✨
-  </div>
+<div id="themes"></div>
 
 </div>
 
 <script>
 
-/* ✅ ONLY CHANGE: FILE NAMING LOGIC */
-function buildImages(prefix, base){
-  return [1,2].map(i => `${prefix}${base}${i}.jpeg`);
-}
-
 const data = {
-  nancy: [
-    {title:'Open when you miss me', emoji:'💌', images: buildImages('', 'missme')},
-    {title:'Open when you feel lonely', emoji:'🌙', images: buildImages('', 'lonely')},
-    {title:'Open when you need reassurance', emoji:'🤍', images: buildImages('', 'reassure')},
-    {title:'Open when you can’t sleep', emoji:'✨', images: buildImages('', 'sleep')},
-    {title:'Open when you want to smile', emoji:'☀️', images: buildImages('', 'smile')},
-    {title:'Open when we have a difficult day', emoji:'🫶', images: buildImages('', 'difficult')}
-  ],
-
-  patrick: [
-    {title:'Open when you miss me', emoji:'💌', images: buildImages('nan', 'missme')},
-    {title:'Open when you feel lonely', emoji:'🌙', images: buildImages('nan', 'lonely')},
-    {title:'Open when you need reassurance', emoji:'🤍', images: buildImages('nan', 'reassure')},
-    {title:'Open when you can’t sleep', emoji:'✨', images: buildImages('nan', 'sleep')},
-    {title:'Open when you want to smile', emoji:'☀️', images: buildImages('nan', 'smile')},
-    {title:'Open when we have a difficult day', emoji:'🫶', images: buildImages('nan', 'difficult')}
-  ],
-
-  both: [
-    {title:'Open when you miss me', emoji:'💌', images: buildImages('both', 'missme')},
-    {title:'Open when you feel lonely', emoji:'🌙', images: buildImages('both', 'lonely')},
-    {title:'Open when you need reassurance', emoji:'🤍', images: buildImages('both', 'reassure')},
-    {title:'Open when you can’t sleep', emoji:'✨', images: buildImages('both', 'sleep')},
-    {title:'Open when you want to smile', emoji:'☀️', images: buildImages('both', 'smile')},
-    {title:'Open when we have a difficult day', emoji:'🫶', images: buildImages('both', 'difficult')}
-  ]
+  missme: {
+    nancy:['missme1.jpeg','missme2.jpeg'],
+    patrick:['nanmissme1.jpeg','nanmissme2.jpeg'],
+    both:['bothmissme1.jpeg','bothmissme2.jpeg']
+  },
+  lonely: {
+    nancy:['lonely1.jpeg','lonely2.jpeg'],
+    patrick:['nanlonely1.jpeg','nanlonely2.jpeg'],
+    both:['bothlonely1.jpeg','bothlonely2.jpeg']
+  },
+  reassure: {
+    nancy:['reassure1.jpeg','reassure2.jpeg'],
+    patrick:['nanreassure1.jpeg','nanreassure2.jpeg'],
+    both:['bothreassure1.jpeg','bothreassure2.jpeg']
+  },
+  sleep: {
+    nancy:['sleep1.jpeg','sleep2.jpeg'],
+    patrick:['nansleep1.jpeg','nansleep2.jpeg'],
+    both:['bothsleep1.jpeg','bothsleep2.jpeg']
+  },
+  smile: {
+    nancy:['smile1.jpeg','smile2.jpeg'],
+    patrick:['nansmile1.jpeg','nansmile2.jpeg'],
+    both:['bothsmile1.jpeg','bothsmile2.jpeg']
+  },
+  difficult: {
+    nancy:['difficult1.jpeg','difficult2.jpeg'],
+    patrick:['nandifficult1.jpeg','nandifficult2.jpeg'],
+    both:['bothdifficult1.jpeg','bothdifficult2.jpeg']
+  }
 };
 
-function render(id, list){
+const themes = Object.keys(data);
+const labels = {
+  missme:"When you miss me",
+  lonely:"When you feel lonely",
+  reassure:"When you need reassurance",
+  sleep:"When you can't sleep",
+  smile:"When you want to smile",
+  difficult:"When we have a difficult day"
+};
 
-  const container = document.getElementById(id);
+const container = document.getElementById("themes");
 
-  list.forEach((l,i)=>{
+themes.forEach(theme=>{
 
-    let idx=0;
+  const div = document.createElement("div");
+  div.className="theme";
+  div.innerHTML=`<b>${labels[theme]}</b>`;
 
-    const el=document.createElement('details');
-    el.className='letter';
+  const submenu = document.createElement("div");
+  submenu.className="submenu";
+
+  ["nancy","patrick","both"].forEach(person=>{
+
+    const sub = document.createElement("div");
+    sub.className="subitem";
+    sub.innerText = person;
+
+    sub.onclick=()=>openGallery(theme, person);
+
+    submenu.appendChild(sub);
+
+  });
+
+  div.onclick=()=>{
+    submenu.style.display = submenu.style.display==="block"?"none":"block";
+  };
+
+  div.appendChild(submenu);
+  container.appendChild(div);
+
+});
+
+/* GALLERY */
+function openGallery(theme, person){
+
+  document.body.innerHTML = `
+  <div class="container">
+    <div onclick="location.reload()" style="cursor:pointer;margin-bottom:20px;">← Back</div>
+    <div id="gallery" class="letters"></div>
+  </div>`;
+
+  const grid = document.getElementById("gallery");
+
+  data[theme][person].forEach((img,i)=>{
+
+    const el=document.createElement("div");
+    el.className="letter";
 
     el.innerHTML=`
-      <summary>
-        <div class="summary-left">
-          <div class="emoji">${l.emoji}</div>
-          <div class="title">${l.title}</div>
-        </div>
-      </summary>
-
-      <div class="content">
-        <img class="letter-image" id="${id}-img-${i}" src="${l.images[0]}">
-
-        <div class="controls">
-          <button id="${id}-p-${i}">←</button>
-          <button id="${id}-n-${i}">→</button>
-        </div>
+      <img class="letter-image" src="${img}">
+      <div class="controls">
+        <button onclick="prev(${i})">←</button>
+        <button onclick="next(${i})">→</button>
       </div>
     `;
 
-    container.appendChild(el);
-
-    const img=document.getElementById(`${id}-img-${i}`);
-    const p=document.getElementById(`${id}-p-${i}`);
-    const n=document.getElementById(`${id}-n-${i}`);
-
-    function update(){
-      img.classList.remove('loaded');
-      setTimeout(()=>img.src=l.images[idx],100);
-      img.onload=()=>img.classList.add('loaded');
-    }
-
-    p.onclick=()=>{if(idx>0){idx--;update();}};
-    n.onclick=()=>{if(idx<l.images.length-1){idx++;update();}};
-
-    update();
+    grid.appendChild(el);
 
   });
+
 }
 
-render('nancy',data.nancy);
-render('patrick',data.patrick);
-render('both',data.both);
-
-/* 🌿 PARALLAX */
+/* PARALLAX */
 document.addEventListener('mousemove',(e)=>{
   const x=(e.clientX/window.innerWidth-0.5)*20;
   const y=(e.clientY/window.innerHeight-0.5)*20;
-
   document.getElementById('layer1').style.transform=`translate(${x}px,${y}px)`;
   document.getElementById('layer2').style.transform=`translate(${-x}px,${-y}px)`;
 });
