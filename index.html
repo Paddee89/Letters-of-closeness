@@ -99,7 +99,6 @@ h1{
   display:block;
 }
 
-/* hidden fallback */
 .hidden{
   display:none;
 }
@@ -124,7 +123,7 @@ A small place for distance ✨
 
   <div class="tabs">
     <div class="tab active" data-tab="nancy">For Nancy</div>
-    <div class="tab" data-tab="nan">For Her</div>
+    <div class="tab" data-tab="patrick">For Patrick</div>
     <div class="tab" data-tab="both">For Both</div>
   </div>
 
@@ -148,35 +147,33 @@ const themes = [
 let currentTheme = null;
 let currentTab = "nancy";
 
-/* 🌙 FILE PREFIX LOGIC */
-
-function getPrefix(tab){
-  if(tab === "nancy") return "";
-  if(tab === "nan") return "nan";
-  if(tab === "both") return "both";
-}
-
-/* 🌙 FILE GENERATION */
-
-function generateFiles(theme, tab){
-
-  const prefix = getPrefix(tab);
+/* FILE MAP (YOUR RULES) */
+function getFiles(theme, tab){
 
   const files = [];
 
-  for(let i=1;i<=5;i++){
+  if(tab === "nancy"){
+    for(let i=1;i<=2;i++){
+      files.push(`${theme}${i}.jpeg`);
+    }
+  }
 
-    const name = `${prefix}${theme}${i}.jpeg`;
+  if(tab === "patrick"){
+    for(let i=1;i<=2;i++){
+      files.push(`nan${theme}${i}.jpeg`);
+    }
+  }
 
-    files.push(name);
-
+  if(tab === "both"){
+    for(let i=1;i<=2;i++){
+      files.push(`both${theme}${i}.jpeg`);
+    }
   }
 
   return files;
 }
 
-/* 🌙 RENDER THEMES */
-
+/* THEMES */
 const themeContainer = document.getElementById("themes");
 
 themes.forEach(t=>{
@@ -191,26 +188,19 @@ themes.forEach(t=>{
 
 });
 
-/* 🌙 OPEN */
-
+/* OPEN */
 function openTheme(id){
-
   currentTheme = id;
-
   document.getElementById("viewer").style.display="block";
-
   render();
-
 }
 
-/* 🌙 CLOSE */
-
+/* CLOSE */
 function closeViewer(){
   document.getElementById("viewer").style.display="none";
 }
 
-/* 🌙 TABS */
-
+/* TABS */
 document.querySelectorAll(".tab").forEach(t=>{
 
   t.onclick=()=>{
@@ -226,14 +216,13 @@ document.querySelectorAll(".tab").forEach(t=>{
 
 });
 
-/* 🌙 RENDER */
-
+/* RENDER */
 function render(){
 
   const grid = document.getElementById("grid");
   grid.innerHTML="";
 
-  const files = generateFiles(currentTheme, currentTab);
+  const files = getFiles(currentTheme, currentTab);
 
   files.forEach(src=>{
 
@@ -245,7 +234,7 @@ function render(){
     img.src = src;
 
     img.onerror = () => {
-      div.classList.add("hidden");
+      div.remove(); // cleanly remove missing images
     };
 
     div.appendChild(img);
