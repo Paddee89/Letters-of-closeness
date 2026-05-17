@@ -5,235 +5,315 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Open When</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
+* { margin:0; padding:0; box-sizing:border-box; }
 
-body{
-  margin:0;
-  font-family:Inter;
-  background: radial-gradient(circle at top,#fff7ed,#fff1f2 40%,#fefce8);
+body {
+  min-height:100vh;
+  font-family:'Inter', sans-serif;
+  background: radial-gradient(circle at top, #fff7ed, #fff1f2 40%, #fefce8);
   color:#44403c;
+  overflow-x:hidden;
 }
 
-.container{
-  max-width:900px;
-  margin:auto;
-  padding:60px 20px;
+/* 🌿 PARALLAX LAYERS */
+.layer {
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
 }
 
-h1{
-  font-family:Cormorant Garamond;
+/* 🕯️ GLOW */
+.glow {
+  position:absolute;
+  width:500px;
+  height:500px;
+  border-radius:50%;
+  filter:blur(100px);
+  opacity:0.25;
+  animation:flicker 6s infinite ease-in-out;
+}
+
+.glow-1 { background:#fecdd3; top:-120px; left:-120px; }
+.glow-2 { background:#fde68a; bottom:-120px; right:-120px; animation-delay:2s; }
+.glow-3 { background:white; top:40%; left:50%; transform:translate(-50%,-50%); opacity:0.12; animation-delay:1s; }
+
+@keyframes flicker {
+  0%,100% { opacity:0.18; transform:scale(1); }
+  50% { opacity:0.3; transform:scale(1.08); }
+}
+
+/* LAYOUT */
+.container {
+  position:relative;
+  z-index:2;
+  max-width:1000px;
+  margin:0 auto;
+  padding:80px 20px;
+}
+
+.hero {
   text-align:center;
-  font-size:3rem;
+  margin-bottom:60px;
 }
 
-.subtitle{
-  text-align:center;
+h1 {
+  font-family:'Cormorant Garamond', serif;
+  font-size:clamp(3rem, 8vw, 6rem);
+  font-weight:400;
+}
+
+.subtitle {
+  margin-top:10px;
   color:#78716c;
-  margin-bottom:40px;
 }
 
-/* THEMES */
-.theme{
-  background:rgba(255,255,255,0.75);
-  padding:18px;
-  border-radius:18px;
-  margin-bottom:12px;
-  cursor:pointer;
-  box-shadow:0 10px 25px rgba(0,0,0,0.05);
+/* CATEGORY */
+.category-block {
+  margin-bottom:70px;
 }
 
-/* VIEW */
-#viewer{
-  display:none;
-  margin-top:30px;
-}
-
-.back{
-  cursor:pointer;
+.category-title {
+  font-family:'Cormorant Garamond', serif;
+  font-size:2rem;
   margin-bottom:20px;
-  color:#78716c;
 }
 
-/* TABS */
-.tabs{
+/* LETTERS GRID */
+.letters {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:18px;
+}
+
+@media(min-width:900px){
+  .letters { grid-template-columns:1fr 1fr; }
+}
+
+/* LETTER CARD */
+.letter {
+  background:rgba(255,255,255,0.8);
+  backdrop-filter:blur(10px);
+  border-radius:24px;
+  padding:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.05);
+}
+
+summary {
+  cursor:pointer;
   display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:20px;
+  justify-content:space-between;
+  align-items:center;
+  list-style:none;
 }
 
-.tab{
-  padding:10px 14px;
+summary::-webkit-details-marker { display:none; }
+
+.summary-left {
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
+.emoji { font-size:1.6rem; }
+
+.title { font-weight:500; }
+
+/* ❌ REMOVED open-text COMPLETELY */
+
+.content {
+  margin-top:15px;
+  border-top:1px solid #eee;
+  padding-top:15px;
+}
+
+/* IMAGE */
+.letter-image {
+  width:100%;
+  border-radius:16px;
+  margin-top:12px;
+  opacity:0;
+  transform:translateY(10px);
+  transition:0.5s;
+}
+
+.letter-image.loaded {
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* BUTTONS */
+.controls {
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin-top:12px;
+}
+
+.nav-button {
+  padding:10px 16px;
+  border:none;
   border-radius:999px;
   background:white;
   cursor:pointer;
   box-shadow:0 5px 15px rgba(0,0,0,0.05);
 }
 
-.tab.active{
-  background:#fde68a;
+/* FOOTER */
+.footer {
+  text-align:center;
+  margin-top:80px;
+  color:#aaa;
 }
 
-/* GRID */
-.grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:16px;
+/* MOBILE */
+@media(max-width:768px){
+  .container { padding:60px 15px; }
 }
-
-@media(min-width:800px){
-  .grid{ grid-template-columns:1fr 1fr; }
-}
-
-.item{
-  background:white;
-  border-radius:16px;
-  overflow:hidden;
-  box-shadow:0 10px 20px rgba(0,0,0,0.05);
-}
-
-.item img{
-  width:100%;
-  display:block;
-}
-
 </style>
 </head>
 
 <body>
 
+<div class="layer" id="layer1">
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
+</div>
+
+<div class="layer" id="layer2">
+  <div class="glow glow-3"></div>
+</div>
+
 <div class="container">
 
-<h1>Open When</h1>
-<div class="subtitle">
-A small place for distance ✨
-</div>
-
-<div id="themes"></div>
-
-<div id="viewer">
-
-  <div class="back" onclick="closeViewer()">← Back</div>
-
-  <div class="tabs">
-    <div class="tab active" data-tab="nancy">For Nancy</div>
-    <div class="tab" data-tab="patrick">For Patrick</div>
-    <div class="tab" data-tab="both">For Both</div>
+  <div class="hero">
+    <h1>Open When</h1>
+    <div class="subtitle">A small place for distance.</div>
   </div>
 
-  <div class="grid" id="grid"></div>
+  <div class="category-block">
+    <div class="category-title">For Nancy</div>
+    <div class="letters" id="nancy"></div>
+  </div>
 
-</div>
+  <div class="category-block">
+    <div class="category-title">For Patrick</div>
+    <div class="letters" id="patrick"></div>
+  </div>
+
+  <div class="category-block">
+    <div class="category-title">For Both</div>
+    <div class="letters" id="both"></div>
+  </div>
+
+  <div class="footer">
+    Austria ↔ Costa Rica ✨
+  </div>
 
 </div>
 
 <script>
 
-const themes = [
-  "missme",
-  "lonely",
-  "reassure",
-  "sleep",
-  "smile",
-  "difficult"
-];
-
-let currentTheme = null;
-let currentTab = "nancy";
-
-/* FILE LOGIC */
-function getFiles(theme, tab){
-
-  const files = [];
-
-  for(let i=1;i<=2;i++){
-
-    if(tab === "nancy"){
-      files.push(`${theme}${i}.jpeg`);
-    }
-
-    if(tab === "patrick"){
-      files.push(`nan${theme}${i}.jpeg`);
-    }
-
-    if(tab === "both"){
-      files.push(`both${theme}${i}.jpeg`);
-    }
-
-  }
-
-  return files;
+/* ✅ ONLY CHANGE: FILE NAMING LOGIC */
+function buildImages(prefix, base){
+  return [1,2].map(i => `${prefix}${base}${i}.jpeg`);
 }
 
-/* THEMES */
-const themeContainer = document.getElementById("themes");
+const data = {
+  nancy: [
+    {title:'Open when you miss me', emoji:'💌', images: buildImages('', 'missme')},
+    {title:'Open when you feel lonely', emoji:'🌙', images: buildImages('', 'lonely')},
+    {title:'Open when you need reassurance', emoji:'🤍', images: buildImages('', 'reassure')},
+    {title:'Open when you can’t sleep', emoji:'✨', images: buildImages('', 'sleep')},
+    {title:'Open when you want to smile', emoji:'☀️', images: buildImages('', 'smile')},
+    {title:'Open when we have a difficult day', emoji:'🫶', images: buildImages('', 'difficult')}
+  ],
 
-themes.forEach(t=>{
+  patrick: [
+    {title:'Open when you miss me', emoji:'💌', images: buildImages('nan', 'missme')},
+    {title:'Open when you feel lonely', emoji:'🌙', images: buildImages('nan', 'lonely')},
+    {title:'Open when you need reassurance', emoji:'🤍', images: buildImages('nan', 'reassure')},
+    {title:'Open when you can’t sleep', emoji:'✨', images: buildImages('nan', 'sleep')},
+    {title:'Open when you want to smile', emoji:'☀️', images: buildImages('nan', 'smile')},
+    {title:'Open when we have a difficult day', emoji:'🫶', images: buildImages('nan', 'difficult')}
+  ],
 
-  const div = document.createElement("div");
-  div.className="theme";
-  div.innerText = "Open when " + t;
+  both: [
+    {title:'Open when you miss me', emoji:'💌', images: buildImages('both', 'missme')},
+    {title:'Open when you feel lonely', emoji:'🌙', images: buildImages('both', 'lonely')},
+    {title:'Open when you need reassurance', emoji:'🤍', images: buildImages('both', 'reassure')},
+    {title:'Open when you can’t sleep', emoji:'✨', images: buildImages('both', 'sleep')},
+    {title:'Open when you want to smile', emoji:'☀️', images: buildImages('both', 'smile')},
+    {title:'Open when we have a difficult day', emoji:'🫶', images: buildImages('both', 'difficult')}
+  ]
+};
 
-  div.onclick=()=>openTheme(t);
+function render(id, list){
 
-  themeContainer.appendChild(div);
+  const container = document.getElementById(id);
 
-});
+  list.forEach((l,i)=>{
 
-/* OPEN */
-function openTheme(t){
-  currentTheme = t;
-  document.getElementById("viewer").style.display="block";
-  render();
-}
+    let idx=0;
 
-/* CLOSE */
-function closeViewer(){
-  document.getElementById("viewer").style.display="none";
-}
+    const el=document.createElement('details');
+    el.className='letter';
 
-/* TABS */
-document.querySelectorAll(".tab").forEach(t=>{
-  t.onclick=()=>{
+    el.innerHTML=`
+      <summary>
+        <div class="summary-left">
+          <div class="emoji">${l.emoji}</div>
+          <div class="title">${l.title}</div>
+        </div>
+      </summary>
 
-    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-    t.classList.add("active");
+      <div class="content">
+        <img class="letter-image" id="${id}-img-${i}" src="${l.images[0]}">
 
-    currentTab = t.dataset.tab;
+        <div class="controls">
+          <button id="${id}-p-${i}">←</button>
+          <button id="${id}-n-${i}">→</button>
+        </div>
+      </div>
+    `;
 
-    render();
+    container.appendChild(el);
 
-  };
-});
+    const img=document.getElementById(`${id}-img-${i}`);
+    const p=document.getElementById(`${id}-p-${i}`);
+    const n=document.getElementById(`${id}-n-${i}`);
 
-/* RENDER */
-function render(){
+    function update(){
+      img.classList.remove('loaded');
+      setTimeout(()=>img.src=l.images[idx],100);
+      img.onload=()=>img.classList.add('loaded');
+    }
 
-  const grid = document.getElementById("grid");
-  grid.innerHTML="";
+    p.onclick=()=>{if(idx>0){idx--;update();}};
+    n.onclick=()=>{if(idx<l.images.length-1){idx++;update();}};
 
-  const files = getFiles(currentTheme, currentTab);
-
-  files.forEach(src=>{
-
-    const div = document.createElement("div");
-    div.className="item";
-
-    const img = document.createElement("img");
-    img.src = src;
-
-    img.onerror = () => {
-      div.remove();
-    };
-
-    div.appendChild(img);
-    grid.appendChild(div);
+    update();
 
   });
-
 }
+
+render('nancy',data.nancy);
+render('patrick',data.patrick);
+render('both',data.both);
+
+/* 🌿 PARALLAX */
+document.addEventListener('mousemove',(e)=>{
+  const x=(e.clientX/window.innerWidth-0.5)*20;
+  const y=(e.clientY/window.innerHeight-0.5)*20;
+
+  document.getElementById('layer1').style.transform=`translate(${x}px,${y}px)`;
+  document.getElementById('layer2').style.transform=`translate(${-x}px,${-y}px)`;
+});
 
 </script>
 
