@@ -20,12 +20,8 @@ body {
   overflow-x:hidden;
 }
 
-.layer {
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
-}
+/* PARALLAX */
+.layer { position:fixed; inset:0; pointer-events:none; z-index:0; }
 
 .glow {
   position:absolute;
@@ -54,10 +50,7 @@ body {
   padding:80px 20px;
 }
 
-.hero {
-  text-align:center;
-  margin-bottom:60px;
-}
+.hero { text-align:center; margin-bottom:60px; }
 
 h1 {
   font-family:'Cormorant Garamond', serif;
@@ -65,14 +58,13 @@ h1 {
   font-weight:400;
 }
 
+/* IMPORTANT: unchanged subtitle */
 .subtitle {
   margin-top:10px;
   color:#78716c;
 }
 
-.category-block {
-  margin-bottom:70px;
-}
+.category-block { margin-bottom:70px; }
 
 .category-title {
   font-family:'Cormorant Garamond', serif;
@@ -107,11 +99,7 @@ summary {
 
 summary::-webkit-details-marker { display:none; }
 
-.summary-left {
-  display:flex;
-  gap:12px;
-  align-items:center;
-}
+.summary-left { display:flex; gap:12px; align-items:center; }
 
 .emoji { font-size:1.6rem; }
 
@@ -123,12 +111,14 @@ summary::-webkit-details-marker { display:none; }
   padding-top:15px;
 }
 
+/* IMAGE */
 .letter-image {
   width:100%;
   border-radius:16px;
   margin-top:12px;
 }
 
+/* BUTTONS */
 .controls {
   display:flex;
   justify-content:center;
@@ -142,6 +132,7 @@ summary::-webkit-details-marker { display:none; }
   border-radius:999px;
   background:white;
   cursor:pointer;
+  box-shadow:0 5px 15px rgba(0,0,0,0.05);
 }
 
 .footer {
@@ -182,6 +173,7 @@ summary::-webkit-details-marker { display:none; }
 
 <script>
 
+/* THEMES */
 const themes = [
   {title:'Open when you miss me', emoji:'💌', key:'missme'},
   {title:'Open when you feel lonely', emoji:'🌙', key:'lonely'},
@@ -191,22 +183,27 @@ const themes = [
   {title:'Open when we have a difficult day', emoji:'🫶', key:'difficult'}
 ];
 
-function file(person,key){
-  if(person==="nancy") return `${key}1.jpeg`;
-  if(person==="patrick") return `nan${key}1.jpeg`;
-  return `both${key}1.jpeg`;
+/* FILE RULE (LOCAL NAMING SYSTEM) */
+function getFile(person, key, index){
+  if(person === "nancy") return `${key}${index+1}.jpeg`;
+  if(person === "patrick") return `nan${key}${index+1}.jpeg`;
+  return `both${key}${index+1}.jpeg`;
 }
 
+/* RENDER */
 function render(){
 
-  const c=document.getElementById("letters");
+  const container = document.getElementById("letters");
 
   themes.forEach((t,i)=>{
 
-    const el=document.createElement("details");
-    el.className="letter";
+    let person = "nancy";
+    let index = 0;
 
-    el.innerHTML=`
+    const el = document.createElement("details");
+    el.className = "letter";
+
+    el.innerHTML = `
       <summary>
         <div class="summary-left">
           <div class="emoji">${t.emoji}</div>
@@ -216,35 +213,53 @@ function render(){
 
       <div class="content">
 
-        <div id="step-${i}">
-          <button onclick="choose(${i},'nancy')">For Nancy</button>
-          <button onclick="choose(${i},'patrick')">For Patrick</button>
-          <button onclick="choose(${i},'both')">For Both</button>
+        <div>
+          <button onclick="setPerson(${i},'nancy')">For Nancy</button>
+          <button onclick="setPerson(${i},'patrick')">For Patrick</button>
+          <button onclick="setPerson(${i},'both')">For Both</button>
         </div>
 
         <img id="img-${i}" class="letter-image">
 
+        <div class="controls">
+          <button onclick="prev(${i})">←</button>
+          <button onclick="next(${i})">→</button>
+        </div>
+
       </div>
     `;
 
-    c.appendChild(el);
+    container.appendChild(el);
+
+    window[`state${i}`] = {person:"nancy", index:0, key:t.key};
+
+    update(i);
   });
 }
 
-function choose(i,person){
-  const t=themes[i];
-  document.getElementById(`img-${i}`).src=file(person,t.key);
+function setPerson(i,p){
+  window[`state${i}`].person = p;
+  window[`state${i}`].index = 0;
+  update(i);
+}
+
+function prev(i){
+  let s = window[`state${i}`];
+  if(s.index > 0){ s.index--; update(i); }
+}
+
+function next(i){
+  let s = window[`state${i}`];
+  if(s.index < 1){ s.index++; update(i); }
+}
+
+function update(i){
+  let s = window[`state${i}`];
+  const img = document.getElementById(`img-${i}`);
+  img.src = getFile(s.person, s.key, s.index);
 }
 
 render();
-
-document.addEventListener('mousemove',(e)=>{
-  const x=(e.clientX/window.innerWidth-0.5)*20;
-  const y=(e.clientY/window.innerHeight-0.5)*20;
-
-  document.getElementById('layer1').style.transform=`translate(${x}px,${y}px)`;
-  document.getElementById('layer2').style.transform=`translate(${-x}px,${-y}px)`;
-});
 
 </script>
 
