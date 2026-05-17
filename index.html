@@ -76,6 +76,16 @@ h1{
   background:#fde68a;
 }
 
+/* UPLOAD */
+.upload{
+  margin-bottom:20px;
+}
+
+.upload input{
+  display:block;
+  margin-top:10px;
+}
+
 /* GRID */
 .grid{
   display:grid;
@@ -97,10 +107,6 @@ h1{
 .item img{
   width:100%;
   display:block;
-}
-
-.hidden{
-  display:none;
 }
 
 </style>
@@ -127,6 +133,11 @@ A small place for distance ✨
     <div class="tab" data-tab="both">For Both</div>
   </div>
 
+  <div class="upload">
+    <b>Upload memory:</b>
+    <input type="file" id="fileInput" />
+  </div>
+
   <div class="grid" id="grid"></div>
 
 </div>
@@ -135,62 +146,52 @@ A small place for distance ✨
 
 <script>
 
+const CLOUD_NAME = "dsrolyylc";
+const UPLOAD_PRESET = "openwhen";
+
 const themes = [
-  { id:"missme", title:"Open when you miss me" },
-  { id:"lonely", title:"Open when you feel lonely" },
-  { id:"reassure", title:"Open when you need reassurance" },
-  { id:"sleep", title:"Open when you can't sleep" },
-  { id:"smile", title:"Open when you want to smile" },
-  { id:"difficult", title:"Open when we have a difficult day" }
+  "missme",
+  "lonely",
+  "reassure",
+  "sleep",
+  "smile",
+  "difficult"
 ];
 
 let currentTheme = null;
 let currentTab = "nancy";
 
-/* FILE MAP (YOUR RULES) */
-function getFiles(theme, tab){
-
-  const files = [];
-
-  if(tab === "nancy"){
-    for(let i=1;i<=2;i++){
-      files.push(`${theme}${i}.jpeg`);
-    }
-  }
-
-  if(tab === "patrick"){
-    for(let i=1;i<=2;i++){
-      files.push(`nan${theme}${i}.jpeg`);
-    }
-  }
-
-  if(tab === "both"){
-    for(let i=1;i<=2;i++){
-      files.push(`both${theme}${i}.jpeg`);
-    }
-  }
-
-  return files;
+/* STORAGE */
+function key(){
+  return `ow-${currentTheme}-${currentTab}`;
 }
 
-/* THEMES */
+function load(){
+  return JSON.parse(localStorage.getItem(key()) || "[]");
+}
+
+function save(data){
+  localStorage.setItem(key(), JSON.stringify(data));
+}
+
+/* RENDER THEMES */
 const themeContainer = document.getElementById("themes");
 
 themes.forEach(t=>{
 
-  const el = document.createElement("div");
-  el.className="theme";
-  el.innerText=t.title;
+  const div = document.createElement("div");
+  div.className="theme";
+  div.innerText = "Open when " + t;
 
-  el.onclick=()=>openTheme(t.id);
+  div.onclick = ()=>openTheme(t);
 
-  themeContainer.appendChild(el);
+  themeContainer.appendChild(div);
 
 });
 
 /* OPEN */
-function openTheme(id){
-  currentTheme = id;
+function openTheme(t){
+  currentTheme = t;
   document.getElementById("viewer").style.display="block";
   render();
 }
@@ -202,18 +203,12 @@ function closeViewer(){
 
 /* TABS */
 document.querySelectorAll(".tab").forEach(t=>{
-
   t.onclick=()=>{
-
     document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
     t.classList.add("active");
-
     currentTab = t.dataset.tab;
-
     render();
-
   };
-
 });
 
 /* RENDER */
@@ -222,27 +217,45 @@ function render(){
   const grid = document.getElementById("grid");
   grid.innerHTML="";
 
-  const files = getFiles(currentTheme, currentTab);
-
-  files.forEach(src=>{
+  load().forEach(url=>{
 
     const div = document.createElement("div");
     div.className="item";
 
-    const img = document.createElement("img");
+    div.innerHTML = `<img src="${url}">`;
 
-    img.src = src;
-
-    img.onerror = () => {
-      div.remove(); // cleanly remove missing images
-    };
-
-    div.appendChild(img);
     grid.appendChild(div);
 
   });
 
 }
+
+/* UPLOAD TO CLOUDINARY */
+document.getElementById("fileInput").addEventListener("change", async (e)=>{
+
+  const file = e.target.files[0];
+
+  const form = new FormData();
+  form.append("file", file);
+  form.append("upload_preset", UPLOAD_PRESET);
+
+  const res = await fetch(
+    `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+    {
+      method:"POST",
+      body:form
+    }
+  );
+
+  const data = await res.json();
+
+  const urls = load();
+  urls.push(data.secure_url);
+  save(urls);
+
+  render();
+
+});
 
 </script>
 
