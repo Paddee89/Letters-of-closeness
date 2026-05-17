@@ -20,7 +20,6 @@ body {
   overflow-x:hidden;
 }
 
-/* 🌿 PARALLAX LAYERS */
 .layer {
   position:fixed;
   inset:0;
@@ -28,7 +27,6 @@ body {
   z-index:0;
 }
 
-/* 🕯️ GLOW */
 .glow {
   position:absolute;
   width:500px;
@@ -48,7 +46,6 @@ body {
   50% { opacity:0.3; transform:scale(1.08); }
 }
 
-/* LAYOUT */
 .container {
   position:relative;
   z-index:2;
@@ -68,13 +65,11 @@ h1 {
   font-weight:400;
 }
 
-/* ✅ RESTORED EXACT SUBTITLE */
 .subtitle {
   margin-top:10px;
   color:#78716c;
 }
 
-/* CATEGORY */
 .category-block {
   margin-bottom:70px;
 }
@@ -85,7 +80,6 @@ h1 {
   margin-bottom:20px;
 }
 
-/* LETTERS GRID */
 .letters {
   display:grid;
   grid-template-columns:1fr;
@@ -96,14 +90,12 @@ h1 {
   .letters { grid-template-columns:1fr 1fr; }
 }
 
-/* LETTER CARD */
 .letter {
   background:rgba(255,255,255,0.8);
   backdrop-filter:blur(10px);
   border-radius:24px;
   padding:20px;
   box-shadow:0 10px 30px rgba(0,0,0,0.05);
-  cursor:pointer;
 }
 
 summary {
@@ -111,7 +103,6 @@ summary {
   display:flex;
   justify-content:space-between;
   align-items:center;
-  list-style:none;
 }
 
 summary::-webkit-details-marker { display:none; }
@@ -126,30 +117,18 @@ summary::-webkit-details-marker { display:none; }
 
 .title { font-weight:500; }
 
-/* ❌ removed open-gently */
-
 .content {
   margin-top:15px;
   border-top:1px solid #eee;
   padding-top:15px;
 }
 
-/* IMAGE */
 .letter-image {
   width:100%;
   border-radius:16px;
   margin-top:12px;
-  opacity:0;
-  transform:translateY(10px);
-  transition:0.5s;
 }
 
-.letter-image.loaded {
-  opacity:1;
-  transform:translateY(0);
-}
-
-/* BUTTONS */
 .controls {
   display:flex;
   justify-content:center;
@@ -163,30 +142,6 @@ summary::-webkit-details-marker { display:none; }
   border-radius:999px;
   background:white;
   cursor:pointer;
-  box-shadow:0 5px 15px rgba(0,0,0,0.05);
-}
-
-/* OVERLAY (SUB-CATEGORY SELECTOR) */
-.overlay {
-  position:fixed;
-  inset:0;
-  background:rgba(255,255,255,0.92);
-  backdrop-filter:blur(6px);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  gap:12px;
-  z-index:999;
-}
-
-.overlay button {
-  padding:12px 18px;
-  border:none;
-  border-radius:999px;
-  background:white;
-  box-shadow:0 5px 15px rgba(0,0,0,0.08);
-  cursor:pointer;
 }
 
 .footer {
@@ -194,7 +149,6 @@ summary::-webkit-details-marker { display:none; }
   margin-top:80px;
   color:#aaa;
 }
-
 </style>
 </head>
 
@@ -217,18 +171,7 @@ summary::-webkit-details-marker { display:none; }
   </div>
 
   <div class="category-block">
-    <div class="category-title">For Nancy</div>
-    <div class="letters" id="nancy"></div>
-  </div>
-
-  <div class="category-block">
-    <div class="category-title">For Patrick</div>
-    <div class="letters" id="patrick"></div>
-  </div>
-
-  <div class="category-block">
-    <div class="category-title">For Both</div>
-    <div class="letters" id="both"></div>
+    <div class="letters" id="letters"></div>
   </div>
 
   <div class="footer">
@@ -239,103 +182,62 @@ summary::-webkit-details-marker { display:none; }
 
 <script>
 
-const data = {
-  nancy: [
-    {title:'Open when you miss me', emoji:'💌', key:'missme'},
-    {title:'Open when you feel lonely', emoji:'🌙', key:'lonely'},
-    {title:'Open when you need reassurance', emoji:'🤍', key:'reassure'},
-    {title:'Open when you can’t sleep', emoji:'✨', key:'sleep'},
-    {title:'Open when you want to smile', emoji:'☀️', key:'smile'},
-    {title:'Open when we have a difficult day', emoji:'🫶', key:'difficult'}
-  ],
-  patrick: [
-    {title:'Open when you miss me', emoji:'💌', key:'missme'},
-    {title:'Open when you feel lonely', emoji:'🌙', key:'lonely'},
-    {title:'Open when you need reassurance', emoji:'🤍', key:'reassure'},
-    {title:'Open when you can’t sleep', emoji:'✨', key:'sleep'},
-    {title:'Open when you want to smile', emoji:'☀️', key:'smile'},
-    {title:'Open when we have a difficult day', emoji:'🫶', key:'difficult'}
-  ],
-  both: [
-    {title:'Open when you miss me', emoji:'💌', key:'missme'},
-    {title:'Open when you feel lonely', emoji:'🌙', key:'lonely'},
-    {title:'Open when you need reassurance', emoji:'🤍', key:'reassure'},
-    {title:'Open when you can’t sleep', emoji:'✨', key:'sleep'},
-    {title:'Open when you want to smile', emoji:'☀️', key:'smile'},
-    {title:'Open when we have a difficult day', emoji:'🫶', key:'difficult'}
-  ]
-};
+const themes = [
+  {title:'Open when you miss me', emoji:'💌', key:'missme'},
+  {title:'Open when you feel lonely', emoji:'🌙', key:'lonely'},
+  {title:'Open when you need reassurance', emoji:'🤍', key:'reassure'},
+  {title:'Open when you can’t sleep', emoji:'✨', key:'sleep'},
+  {title:'Open when you want to smile', emoji:'☀️', key:'smile'},
+  {title:'Open when we have a difficult day', emoji:'🫶', key:'difficult'}
+];
 
-/* REAL FILE NAMING RULE */
-function fileName(person, key){
-  if(person === "nancy") return `${key}1.jpeg`;
-  if(person === "patrick") return `nan${key}1.jpeg`;
+function file(person,key){
+  if(person==="nancy") return `${key}1.jpeg`;
+  if(person==="patrick") return `nan${key}1.jpeg`;
   return `both${key}1.jpeg`;
 }
 
-/* RENDER */
-function render(id, list){
+function render(){
 
-  const container = document.getElementById(id);
+  const c=document.getElementById("letters");
 
-  list.forEach((l,i)=>{
+  themes.forEach((t,i)=>{
 
-    const el = document.createElement('details');
-    el.className = 'letter';
+    const el=document.createElement("details");
+    el.className="letter";
 
-    el.innerHTML = `
+    el.innerHTML=`
       <summary>
         <div class="summary-left">
-          <div class="emoji">${l.emoji}</div>
-          <div class="title">${l.title}</div>
+          <div class="emoji">${t.emoji}</div>
+          <div class="title">${t.title}</div>
         </div>
       </summary>
 
       <div class="content">
-        <div id="choices-${id}-${i}"></div>
-        <div id="images-${id}-${i}"></div>
+
+        <div id="step-${i}">
+          <button onclick="choose(${i},'nancy')">For Nancy</button>
+          <button onclick="choose(${i},'patrick')">For Patrick</button>
+          <button onclick="choose(${i},'both')">For Both</button>
+        </div>
+
+        <img id="img-${i}" class="letter-image">
+
       </div>
     `;
 
-    container.appendChild(el);
-
-    el.addEventListener("toggle", () => {
-      if(el.open && !el.dataset.loaded){
-        showChoices(id, i, l.key);
-        el.dataset.loaded = "1";
-      }
-    });
-
+    c.appendChild(el);
   });
 }
 
-/* SUBCATEGORY STEP */
-function showChoices(id, i, key){
-
-  const box = document.getElementById(`choices-${id}-${i}`);
-
-  box.innerHTML = `
-    <button onclick="loadImages('${id}',${i},'nancy','${key}')">For Nancy</button>
-    <button onclick="loadImages('${id}',${i},'patrick','${key}')">For Patrick</button>
-    <button onclick="loadImages('${id}',${i},'both','${key}')">For Both</button>
-  `;
+function choose(i,person){
+  const t=themes[i];
+  document.getElementById(`img-${i}`).src=file(person,t.key);
 }
 
-/* LOAD IMAGES */
-function loadImages(id,i,person,key){
+render();
 
-  const img = fileName(person,key);
-  const box = document.getElementById(`images-${id}-${i}`);
-
-  box.innerHTML = `<img class="letter-image loaded" src="${img}">`;
-}
-
-/* INIT */
-render('nancy',data.nancy);
-render('patrick',data.patrick);
-render('both',data.both);
-
-/* PARALLAX */
 document.addEventListener('mousemove',(e)=>{
   const x=(e.clientX/window.innerWidth-0.5)*20;
   const y=(e.clientY/window.innerHeight-0.5)*20;
