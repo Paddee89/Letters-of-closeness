@@ -1,262 +1,375 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Open When</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Open When</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
-<style>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-body{
-  margin:0;
-  font-family:Inter;
-  background: radial-gradient(circle at top,#fff7ed,#fff1f2 40%,#fefce8);
-  color:#44403c;
-}
+    body {
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom, #fff1f2, #fffbeb, #fefce8);
+      color: #44403c;
+      overflow-x: hidden;
+      position: relative;
+    }
 
-.container{
-  max-width:900px;
-  margin:auto;
-  padding:60px 20px;
-}
+    .glow {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      filter: blur(90px);
+      opacity: 0.35;
+      z-index: 0;
+    }
 
-h1{
-  font-family:Cormorant Garamond;
-  text-align:center;
-  font-size:3rem;
-}
+    .glow-1 { background: #fecdd3; top: -100px; left: -100px; }
+    .glow-2 { background: #fde68a; bottom: -100px; right: -100px; }
 
-.subtitle{
-  text-align:center;
-  color:#78716c;
-  margin-bottom:40px;
-}
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 20px;
+    }
 
-/* THEMES */
-.theme{
-  background:rgba(255,255,255,0.75);
-  padding:18px;
-  border-radius:18px;
-  margin-bottom:12px;
-  cursor:pointer;
-  box-shadow:0 10px 25px rgba(0,0,0,0.05);
-}
+    .hero {
+      text-align: center;
+      margin-bottom: 60px;
+    }
 
-/* VIEW */
-#viewer{
-  display:none;
-  margin-top:30px;
-}
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 400;
+      color: #57534e;
+      margin-bottom: 16px;
+    }
 
-.back{
-  cursor:pointer;
-  margin-bottom:20px;
-  color:#78716c;
-}
+    .subtitle {
+      font-size: 1.05rem;
+      color: #78716c;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
 
-/* TABS */
-.tabs{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:20px;
-}
+    .letters {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
 
-.tab{
-  padding:10px 14px;
-  border-radius:999px;
-  background:white;
-  cursor:pointer;
-  box-shadow:0 5px 15px rgba(0,0,0,0.05);
-}
+    .letter {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      border-radius: 28px;
+      padding: 26px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      transition: all 0.35s ease;
+    }
 
-.tab.active{
-  background:#fde68a;
-}
+    .letter:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.88);
+    }
 
-/* UPLOAD */
-.upload{
-  margin-bottom:20px;
-}
+    details {
+      transition: all 0.4s ease;
+    }
 
-.upload input{
-  display:block;
-  margin-top:10px;
-}
+    details[open] {
+      animation: openLetter 0.35s ease;
+    }
 
-/* GRID */
-.grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:16px;
-}
+    @keyframes openLetter {
+      from { opacity: 0.6; transform: scale(0.98); }
+      to { opacity: 1; transform: scale(1); }
+    }
 
-@media(min-width:800px){
-  .grid{ grid-template-columns:1fr 1fr; }
-}
+    summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
 
-.item{
-  background:white;
-  border-radius:16px;
-  overflow:hidden;
-  box-shadow:0 10px 20px rgba(0,0,0,0.05);
-}
+    summary::-webkit-details-marker {
+      display: none;
+    }
 
-.item img{
-  width:100%;
-  display:block;
-}
+    .summary-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
 
-</style>
+    .emoji {
+      font-size: 1.8rem;
+    }
+
+    .title {
+      font-size: 1.25rem;
+      font-weight: 500;
+    }
+
+    .open-text {
+      font-size: 0.85rem;
+      color: #a8a29e;
+      font-style: italic;
+    }
+
+    .content {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(214, 211, 209, 0.6);
+    }
+
+    .letter-image {
+      width: 100%;
+      border-radius: 18px;
+      margin-top: 18px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.5s ease;
+    }
+
+    .letter-image.loaded {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .nav-button {
+      border: none;
+      background: rgba(255,255,255,0.78);
+      backdrop-filter: blur(10px);
+      padding: 12px 20px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      color: #57534e;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+    }
+
+    .nav-button:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.95);
+    }
+
+    .nav-button:active {
+      transform: scale(0.96);
+    }
+
+    .nav-button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .footer {
+      margin-top: 80px;
+      text-align: center;
+      color: #a8a29e;
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .floating-heart {
+      position: fixed;
+      font-size: 14px;
+      opacity: 0.15;
+      animation: float 12s linear infinite;
+      z-index: 0;
+    }
+
+    @keyframes float {
+      from { transform: translateY(100vh); opacity: 0; }
+      20% { opacity: 0.15; }
+      to { transform: translateY(-120px); opacity: 0; }
+    }
+
+    /* 🌿 MOBILE RESPONSIVENESS */
+    @media (max-width: 768px) {
+      .container {
+        padding: 60px 14px;
+      }
+
+      h1 {
+        font-size: 3rem;
+      }
+
+      .letter {
+        padding: 20px;
+      }
+
+      .title {
+        font-size: 1.1rem;
+      }
+
+      .subtitle {
+        font-size: 1rem;
+      }
+
+      .controls {
+        flex-direction: column;
+      }
+
+      .nav-button {
+        width: 100%;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .container {
+        max-width: 1000px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="container">
+  <div class="glow glow-1"></div>
+  <div class="glow glow-2"></div>
 
-<h1>Open When</h1>
-<div class="subtitle">
-A small place for distance ✨
-</div>
+  <div class="container">
 
-<div id="themes"></div>
+    <div class="hero">
+      <h1>Open When</h1>
+      <p class="subtitle">
+        A small place for the moments when the distance feels harder.
+      </p>
+    </div>
 
-<div id="viewer">
+    <section class="letters" id="letters-container"></section>
 
-  <div class="back" onclick="closeViewer()">← Back</div>
+    <div class="footer">
+      <p>Austria ↔ Costa Rica</p>
+      <p>Distance changes nothing important ✨</p>
+    </div>
 
-  <div class="tabs">
-    <div class="tab active" data-tab="nancy">For Nancy</div>
-    <div class="tab" data-tab="patrick">For Patrick</div>
-    <div class="tab" data-tab="both">For Both</div>
   </div>
-
-  <div class="upload">
-    <b>Upload memory:</b>
-    <input type="file" id="fileInput" />
-  </div>
-
-  <div class="grid" id="grid"></div>
-
-</div>
-
-</div>
 
 <script>
-
-const CLOUD_NAME = "dsrolyylc";
-const UPLOAD_PRESET = "openwhen";
-
-const themes = [
-  "missme",
-  "lonely",
-  "reassure",
-  "sleep",
-  "smile",
-  "difficult"
+const letters = [
+  { title:'Open when you miss me', emoji:'💌', images:['missme1.jpeg','missme2.jpeg'] },
+  { title:'Open when you feel lonely', emoji:'🌙', images:['lonely1.jpeg','lonely2.jpeg'] },
+  { title:'Open when you need reassurance', emoji:'🤍', images:['reassure1.jpeg','reassure2.jpeg'] },
+  { title:'Open when you can’t sleep', emoji:'✨', images:['sleep1.jpeg','sleep2.jpeg'] },
+  { title:'Open when you want to smile', emoji:'☀️', images:['smile1.jpeg','smile2.jpeg'] },
+  { title:'Open when we have a difficult day', emoji:'🫶', images:['difficult1.jpeg','difficult2.jpeg'] }
 ];
 
-let currentTheme = null;
-let currentTab = "nancy";
+const container = document.getElementById('letters-container');
 
-/* STORAGE */
-function key(){
-  return `ow-${currentTheme}-${currentTab}`;
-}
+function renderLetters() {
 
-function load(){
-  return JSON.parse(localStorage.getItem(key()) || "[]");
-}
+  container.innerHTML = '';
 
-function save(data){
-  localStorage.setItem(key(), JSON.stringify(data));
-}
+  letters.forEach((letter, i) => {
 
-/* RENDER THEMES */
-const themeContainer = document.getElementById("themes");
+    let index = 0;
 
-themes.forEach(t=>{
+    const el = document.createElement('details');
+    el.className = 'letter';
 
-  const div = document.createElement("div");
-  div.className="theme";
-  div.innerText = "Open when " + t;
+    el.innerHTML = `
+      <summary>
+        <div class="summary-left">
+          <div class="emoji">${letter.emoji}</div>
+          <div class="title">${letter.title}</div>
+        </div>
+        <div class="open-text">open gently ✨</div>
+      </summary>
 
-  div.onclick = ()=>openTheme(t);
+      <div class="content">
+        <img class="letter-image" id="img-${i}" src="${letter.images[0]}">
 
-  themeContainer.appendChild(div);
+        <div class="controls">
+          <button class="nav-button" id="prev-${i}">← Previous</button>
+          <button class="nav-button" id="next-${i}">Next →</button>
+        </div>
+      </div>
+    `;
 
-});
+    container.appendChild(el);
 
-/* OPEN */
-function openTheme(t){
-  currentTheme = t;
-  document.getElementById("viewer").style.display="block";
-  render();
-}
+    const img = document.getElementById(`img-${i}`);
+    const prev = document.getElementById(`prev-${i}`);
+    const next = document.getElementById(`next-${i}`);
 
-/* CLOSE */
-function closeViewer(){
-  document.getElementById("viewer").style.display="none";
-}
+    function update() {
+      img.classList.remove('loaded');
 
-/* TABS */
-document.querySelectorAll(".tab").forEach(t=>{
-  t.onclick=()=>{
-    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-    t.classList.add("active");
-    currentTab = t.dataset.tab;
-    render();
-  };
-});
+      setTimeout(() => {
+        img.src = letter.images[index];
+      }, 120);
 
-/* RENDER */
-function render(){
+      img.onload = () => img.classList.add('loaded');
 
-  const grid = document.getElementById("grid");
-  grid.innerHTML="";
+      prev.disabled = index === 0;
+      next.disabled = index === letter.images.length - 1;
+    }
 
-  load().forEach(url=>{
+    prev.onclick = () => {
+      if(index > 0) index--;
+      update();
+    };
 
-    const div = document.createElement("div");
-    div.className="item";
+    next.onclick = () => {
+      if(index < letter.images.length - 1) index++;
+      update();
+    };
 
-    div.innerHTML = `<img src="${url}">`;
+    update();
 
-    grid.appendChild(div);
+    el.addEventListener('toggle', () => {
+      if(el.open) {
+        document.querySelectorAll('details').forEach(d => {
+          if(d !== el) d.open = false;
+        });
+      }
+    });
 
   });
-
 }
 
-/* UPLOAD TO CLOUDINARY */
-document.getElementById("fileInput").addEventListener("change", async (e)=>{
+renderLetters();
 
-  const file = e.target.files[0];
-
-  const form = new FormData();
-  form.append("file", file);
-  form.append("upload_preset", UPLOAD_PRESET);
-
-  const res = await fetch(
-    `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-    {
-      method:"POST",
-      body:form
-    }
-  );
-
-  const data = await res.json();
-
-  const urls = load();
-  urls.push(data.secure_url);
-  save(urls);
-
-  render();
-
-});
-
+setInterval(() => {
+  const h = document.createElement('div');
+  h.className = 'floating-heart';
+  h.innerHTML = '❤';
+  h.style.left = Math.random()*100+'vw';
+  h.style.animationDuration = (8+Math.random()*8)+'s';
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),16000);
+},1400);
 </script>
 
 </body>
