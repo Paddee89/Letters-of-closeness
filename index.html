@@ -20,7 +20,7 @@ body {
   overflow-x:hidden;
 }
 
-/* 🌿 PARALLAX LAYERS */
+/* PARALLAX */
 .layer {
   position:fixed;
   inset:0;
@@ -28,7 +28,6 @@ body {
   z-index:0;
 }
 
-/* 🕯️ GLOW */
 .glow {
   position:absolute;
   width:500px;
@@ -95,19 +94,6 @@ h1 {
   background:white;
   border-radius:12px;
   cursor:pointer;
-  box-shadow:0 5px 15px rgba(0,0,0,0.05);
-}
-
-/* LETTER GRID */
-.letters {
-  display:grid;
-  grid-template-columns:1fr;
-  gap:18px;
-  margin-top:30px;
-}
-
-@media(min-width:900px){
-  .letters { grid-template-columns:1fr 1fr; }
 }
 
 /* LETTER */
@@ -116,48 +102,17 @@ h1 {
   backdrop-filter:blur(10px);
   border-radius:24px;
   padding:20px;
-}
-
-summary {
-  cursor:pointer;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  list-style:none;
-}
-
-summary::-webkit-details-marker { display:none; }
-
-.summary-left {
-  display:flex;
-  gap:12px;
-  align-items:center;
-}
-
-.emoji { font-size:1.6rem; }
-
-.title { font-weight:500; }
-
-.content {
   margin-top:15px;
-  border-top:1px solid #eee;
-  padding-top:15px;
 }
 
+/* IMAGE */
 .letter-image {
   width:100%;
   border-radius:16px;
   margin-top:12px;
-  opacity:0;
-  transform:translateY(10px);
-  transition:0.5s;
 }
 
-.letter-image.loaded {
-  opacity:1;
-  transform:translateY(0);
-}
-
+/* BUTTONS */
 .controls {
   display:flex;
   justify-content:center;
@@ -172,12 +127,6 @@ button {
   background:white;
   cursor:pointer;
   box-shadow:0 5px 15px rgba(0,0,0,0.05);
-}
-
-.footer {
-  text-align:center;
-  margin-top:80px;
-  color:#aaa;
 }
 
 </style>
@@ -240,7 +189,6 @@ const data = {
   }
 };
 
-const themes = Object.keys(data);
 const labels = {
   missme:"When you miss me",
   lonely:"When you feel lonely",
@@ -252,61 +200,59 @@ const labels = {
 
 const container = document.getElementById("themes");
 
-themes.forEach(theme=>{
+/* THEMES */
+Object.keys(data).forEach(theme=>{
 
-  const div = document.createElement("div");
-  div.className="theme";
-  div.innerHTML=`<b>${labels[theme]}</b>`;
+  const block = document.createElement("div");
+  block.className="theme";
+
+  const title = document.createElement("div");
+  title.innerHTML = `<b>${labels[theme]}</b>`;
 
   const submenu = document.createElement("div");
   submenu.className="submenu";
 
   ["nancy","patrick","both"].forEach(person=>{
 
-    const sub = document.createElement("div");
-    sub.className="subitem";
-    sub.innerText = person;
+    const item = document.createElement("div");
+    item.className="subitem";
+    item.innerText = "For " + person;
 
-    sub.onclick=()=>openGallery(theme, person);
+    item.onclick=()=>open(theme,person);
 
-    submenu.appendChild(sub);
+    submenu.appendChild(item);
 
   });
 
-  div.onclick=()=>{
-    submenu.style.display = submenu.style.display==="block"?"none":"block";
-  };
+  block.onclick=()=>submenu.style.display =
+    submenu.style.display==="block"?"none":"block";
 
-  div.appendChild(submenu);
-  container.appendChild(div);
+  block.appendChild(title);
+  block.appendChild(submenu);
+
+  container.appendChild(block);
 
 });
 
-/* GALLERY */
-function openGallery(theme, person){
+/* OPEN LETTERS */
+function open(theme, person){
 
   document.body.innerHTML = `
   <div class="container">
-    <div onclick="location.reload()" style="cursor:pointer;margin-bottom:20px;">← Back</div>
-    <div id="gallery" class="letters"></div>
+    <h2 onclick="location.reload()" style="cursor:pointer;">← Back</h2>
+    <div id="view"></div>
   </div>`;
 
-  const grid = document.getElementById("gallery");
+  const view = document.getElementById("view");
 
-  data[theme][person].forEach((img,i)=>{
+  data[theme][person].forEach((img)=>{
 
-    const el=document.createElement("div");
+    const el = document.createElement("div");
     el.className="letter";
 
-    el.innerHTML=`
-      <img class="letter-image" src="${img}">
-      <div class="controls">
-        <button onclick="prev(${i})">←</button>
-        <button onclick="next(${i})">→</button>
-      </div>
-    `;
+    el.innerHTML = `<img class="letter-image" src="${img}">`;
 
-    grid.appendChild(el);
+    view.appendChild(el);
 
   });
 
@@ -316,6 +262,7 @@ function openGallery(theme, person){
 document.addEventListener('mousemove',(e)=>{
   const x=(e.clientX/window.innerWidth-0.5)*20;
   const y=(e.clientY/window.innerHeight-0.5)*20;
+
   document.getElementById('layer1').style.transform=`translate(${x}px,${y}px)`;
   document.getElementById('layer2').style.transform=`translate(${-x}px,${-y}px)`;
 });
