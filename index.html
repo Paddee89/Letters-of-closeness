@@ -68,6 +68,7 @@ h1 {
   font-weight:400;
 }
 
+/* ✅ RESTORED EXACT SUBTITLE */
 .subtitle {
   margin-top:10px;
   color:#78716c;
@@ -165,33 +166,33 @@ summary::-webkit-details-marker { display:none; }
   box-shadow:0 5px 15px rgba(0,0,0,0.05);
 }
 
-/* FOOTER */
-.footer {
-  text-align:center;
-  margin-top:80px;
-  color:#aaa;
-}
-
-/* OVERLAY */
+/* OVERLAY (SUB-CATEGORY SELECTOR) */
 .overlay {
   position:fixed;
   inset:0;
-  background:rgba(255,255,255,0.95);
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(6px);
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
+  gap:12px;
   z-index:999;
-  gap:20px;
 }
 
 .overlay button {
-  padding:12px 20px;
-  border-radius:999px;
+  padding:12px 18px;
   border:none;
-  background:#fff;
-  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  border-radius:999px;
+  background:white;
+  box-shadow:0 5px 15px rgba(0,0,0,0.08);
   cursor:pointer;
+}
+
+.footer {
+  text-align:center;
+  margin-top:80px;
+  color:#aaa;
 }
 
 </style>
@@ -265,22 +266,24 @@ const data = {
   ]
 };
 
-function fileMap(person, key){
+/* REAL FILE NAMING RULE */
+function fileName(person, key){
   if(person === "nancy") return `${key}1.jpeg`;
   if(person === "patrick") return `nan${key}1.jpeg`;
   return `both${key}1.jpeg`;
 }
 
+/* RENDER */
 function render(id, list){
 
   const container = document.getElementById(id);
 
   list.forEach((l,i)=>{
 
-    const el=document.createElement('details');
-    el.className='letter';
+    const el = document.createElement('details');
+    el.className = 'letter';
 
-    el.innerHTML=`
+    el.innerHTML = `
       <summary>
         <div class="summary-left">
           <div class="emoji">${l.emoji}</div>
@@ -288,15 +291,17 @@ function render(id, list){
         </div>
       </summary>
 
-      <div class="content" id="content-${id}-${i}"></div>
+      <div class="content">
+        <div id="choices-${id}-${i}"></div>
+        <div id="images-${id}-${i}"></div>
+      </div>
     `;
 
     container.appendChild(el);
 
-    el.addEventListener("click", (e)=>{
+    el.addEventListener("toggle", () => {
       if(el.open && !el.dataset.loaded){
-
-        showOverlay(id, i, l.key, l.title);
+        showChoices(id, i, l.key);
         el.dataset.loaded = "1";
       }
     });
@@ -304,34 +309,28 @@ function render(id, list){
   });
 }
 
-/* SUBCATEGORY OVERLAY */
-function showOverlay(person, index, key, title){
+/* SUBCATEGORY STEP */
+function showChoices(id, i, key){
 
-  const overlay = document.createElement("div");
-  overlay.className = "overlay";
+  const box = document.getElementById(`choices-${id}-${i}`);
 
-  overlay.innerHTML = `
-    <h2>${title}</h2>
-    <button onclick="openImages('${person}','${key}','nancy')">For Nancy</button>
-    <button onclick="openImages('${person}','${key}','patrick')">For Patrick</button>
-    <button onclick="openImages('${person}','${key}','both')">For Both</button>
-    <button onclick="this.parentElement.remove()">Close</button>
+  box.innerHTML = `
+    <button onclick="loadImages('${id}',${i},'nancy','${key}')">For Nancy</button>
+    <button onclick="loadImages('${id}',${i},'patrick','${key}')">For Patrick</button>
+    <button onclick="loadImages('${id}',${i},'both','${key}')">For Both</button>
   `;
-
-  document.body.appendChild(overlay);
 }
 
 /* LOAD IMAGES */
-function openImages(_, key, person){
+function loadImages(id,i,person,key){
 
-  document.querySelectorAll(".overlay").forEach(o=>o.remove());
+  const img = fileName(person,key);
+  const box = document.getElementById(`images-${id}-${i}`);
 
-  const img = fileMap(person, key);
-
-  alert("Loading: " + img + " (add second image logic if needed)");
+  box.innerHTML = `<img class="letter-image loaded" src="${img}">`;
 }
 
-/* RENDER */
+/* INIT */
 render('nancy',data.nancy);
 render('patrick',data.patrick);
 render('both',data.both);
